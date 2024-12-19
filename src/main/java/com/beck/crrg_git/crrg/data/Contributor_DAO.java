@@ -1,7 +1,7 @@
-package com.beck.beck_demos.crrg.data;
-import com.beck.beck_demos.crrg.data_interfaces.iContributor_DAO;
-import com.beck.beck_demos.crrg.models.Contributor;
-import com.beck.beck_demos.crrg.models.Contributor_VM;
+package com.beck.crrg_git.crrg.data;
+import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
+import com.beck.crrg_git.crrg.models.Contributor;
+import com.beck.crrg_git.crrg.models.Contributor_VM;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.beck.beck_demos.crrg.data.Database.getConnection;
+import static com.beck.crrg_git.crrg.data.Database.getConnection;
 
 public class Contributor_DAO implements iContributor_DAO{
   /**
@@ -26,7 +26,7 @@ public class Contributor_DAO implements iContributor_DAO{
         try (CallableStatement statement = connection.prepareCall("{CALL sp_insert_Contributor( ?, ?, ?)}")){
           statement.setString(1,_contributor.getFirst_Name());
           statement.setString(2,_contributor.getLast_Name());
-          statement.setString(3,_contributor.getemail());
+          statement.setString(3,_contributor.getEmail());
           numRowsAffected = statement.executeUpdate();
           if (numRowsAffected == 0) {
             throw new RuntimeException("Could not add Contributor. Try again later");
@@ -144,8 +144,8 @@ public class Contributor_DAO implements iContributor_DAO{
           statement.setString(3,newContributor.getFirst_Name());
           statement.setString(4,oldContributor.getLast_Name());
           statement.setString(5,newContributor.getLast_Name());
-          statement.setString(6,oldContributor.getemail());
-          statement.setString(7,newContributor.getemail());
+          statement.setString(6,oldContributor.getEmail());
+          statement.setString(7,newContributor.getEmail());
           result=statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update Contributor . Try again later");

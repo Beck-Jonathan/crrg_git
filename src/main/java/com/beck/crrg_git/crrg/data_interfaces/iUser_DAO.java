@@ -1,14 +1,8 @@
-package com.beck.beck_demos.crrg.data_interfaces;
+package com.beck.crrg_git.crrg.data_interfaces;
 
-import com.beck.beck_demos.crrg.models.*;
-import org.mindrot.jbcrypt.BCrypt;
+import com.beck.crrg_git.crrg.models.*;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 

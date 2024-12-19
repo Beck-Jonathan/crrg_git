@@ -1,10 +1,8 @@
-package com.beck.beck_demos.crrg.controllers;
+package com.beck.crrg_git.crrg.controllers;
 
-import com.beck.beck_demos.crrg.data.User_DAO;
-import com.beck.beck_demos.crrg.models.User;
-
-
-import com.beck.beck_demos.crrg.data_interfaces.iUser_DAO;
+import com.beck.crrg_git.crrg.data.User_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -15,7 +13,8 @@ import org.joda.time.DateTime;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/crrgLogin")
 public class Login_Servlet extends HttpServlet {

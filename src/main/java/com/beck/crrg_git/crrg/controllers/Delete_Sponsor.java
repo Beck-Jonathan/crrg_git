@@ -1,20 +1,21 @@
-package com.beck.beck_demos.crrg.controllers;
+package com.beck.crrg_git.crrg.controllers;
 
 /******************
  Create the Servlet For Deleteing from the Sponsor table
  Created By Jonathan Beck 11/14/2024
  ***************/
 
-import com.beck.beck_demos.crrg.data.Sponsor_DAO;
-import com.beck.beck_demos.crrg.models.Sponsor;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.iSponsor_DAO;
+import com.beck.crrg_git.crrg.data.Sponsor_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iSponsor_DAO;
+import com.beck.crrg_git.crrg.models.Sponsor;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;

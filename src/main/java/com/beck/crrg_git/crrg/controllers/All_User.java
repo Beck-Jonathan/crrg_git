@@ -1,25 +1,24 @@
-package com.beck.beck_demos.crrg.controllers;
+package com.beck.crrg_git.crrg.controllers;
 /******************
  Create the Servlet  For Viewing all of the  User table
  Created By Jonathan Beck 10/15/2024
  ***************/
 
-import com.beck.beck_demos.crrg.data.User_DAO;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.iUser_DAO;
+import com.beck.crrg_git.crrg.data.User_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @WebServlet("/allCrrgUser")
 public class All_User extends HttpServlet {
   static List<String> allRoles ;

@@ -1,20 +1,18 @@
-package com.beck.beck_demos.crrg.data;
+package com.beck.crrg_git.crrg.data;
 
-import com.beck.beck_demos.crrg.data_interfaces.ISponsor_Tag_DAO;
-import com.beck.beck_demos.crrg.models.Picture;
-import com.beck.beck_demos.crrg.models.Sponsor_Tag;
-import com.beck.beck_demos.crrg.models.Sponsor_Tag_VM;
+import com.beck.crrg_git.crrg.data_interfaces.ISponsor_Tag_DAO;
+import com.beck.crrg_git.crrg.models.Picture;
+import com.beck.crrg_git.crrg.models.Sponsor_Tag;
+import com.beck.crrg_git.crrg.models.Sponsor_Tag_VM;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import com.beck.beck_demos.crrg.models.Sponsor_Tag;
-import java.sql.CallableStatement;
 
-
-import static com.beck.beck_demos.crrg.data.Database.getConnection;
+import static com.beck.crrg_git.crrg.data.Database.getConnection;
 
 public class Sponsor_Tag_DAO implements ISponsor_Tag_DAO {
   /**

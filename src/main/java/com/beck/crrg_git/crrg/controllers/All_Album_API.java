@@ -1,11 +1,9 @@
-package com.beck.beck_demos.crrg.controllers;
+package com.beck.crrg_git.crrg.controllers;
 
-import com.azure.json.implementation.jackson.core.JsonProcessingException;
-import com.beck.beck_demos.crrg.data.Album_DAO;
-import com.beck.beck_demos.crrg.models.Album;
-import com.beck.beck_demos.crrg.models.Album_VM;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.iAlbum_DAO;
+import com.beck.crrg_git.crrg.data.Album_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iAlbum_DAO;
+import com.beck.crrg_git.crrg.models.Album_VM;
+import com.beck.crrg_git.crrg.models.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,13 +11,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @WebServlet("/all-Albums_API")
 public class All_Album_API extends HttpServlet {
   private iAlbum_DAO albumDAO;

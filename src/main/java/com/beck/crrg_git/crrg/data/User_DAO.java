@@ -1,17 +1,15 @@
-package com.beck.beck_demos.crrg.data;
+package com.beck.crrg_git.crrg.data;
 
-import com.beck.beck_demos.crrg.data_interfaces.iUser_DAO;
-import com.beck.beck_demos.crrg.models.User;
-
+import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
+import com.beck.crrg_git.crrg.models.User;
 import org.joda.time.DateTime;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.beck.beck_demos.crrg.data.Database.getConnection;
+import static com.beck.crrg_git.crrg.data.Database.getConnection;
 
 public class User_DAO implements iUser_DAO {
 //  @Override
@@ -287,7 +285,7 @@ public boolean usernameFree(String username) throws SQLException {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_update_User_last_log_in(? ,?)}"))
         {
           statement.setString(1,user.getUser_ID());
-          statement.setTimestamp(2,new java.sql.Timestamp(user.getLast_Logged_In().toDate().getTime()));
+          statement.setTimestamp(2,new Timestamp(user.getLast_Logged_In().toDate().getTime()));
           result = statement.executeUpdate();
         } catch (SQLException e) {
           throw new RuntimeException("Could not update User . Try again later");

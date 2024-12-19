@@ -1,25 +1,25 @@
-package com.beck.beck_demos.crrg.controllers;
+package com.beck.crrg_git.crrg.controllers;
 
 /******************
  Create the Servlet For Deleteing from the Sponsor_Tag table
  Created By Jonathan Beck 11/14/2024
  ***************/
 
-import com.beck.beck_demos.crrg.data.Sponsor_Tag_DAO;
-import com.beck.beck_demos.crrg.models.Sponsor_Tag;
-import com.beck.beck_demos.crrg.models.Sponsor_Tag_VM;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.ISponsor_Tag_DAO;
+import com.beck.crrg_git.crrg.data.Sponsor_Tag_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.ISponsor_Tag_DAO;
+import com.beck.crrg_git.crrg.models.Sponsor_Tag_VM;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 @WebServlet("/deletesponsor_tag")
 public class Delete_Sponsor_Image extends HttpServlet {

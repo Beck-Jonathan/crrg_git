@@ -1,8 +1,7 @@
-package com.beck.beck_demos.crrg.data_interfaces;
+package com.beck.crrg_git.crrg.data_interfaces;
 
-import com.beck.beck_demos.crrg.models.Album;
-import com.beck.beck_demos.crrg.models.Album_VM;
-
+import com.beck.crrg_git.crrg.models.Album;
+import com.beck.crrg_git.crrg.models.Album_VM;
 
 import java.sql.SQLException;
 import java.util.List;

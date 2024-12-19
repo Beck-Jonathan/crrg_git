@@ -1,21 +1,21 @@
-package com.beck.beck_demos.crrg.controllers;
+package com.beck.crrg_git.crrg.controllers;
 
-
-import com.beck.beck_demos.crrg.data.Sponsor_DAO;
-import com.beck.beck_demos.crrg.models.Sponsor;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.iSponsor_DAO;
+import com.beck.crrg_git.crrg.data.Sponsor_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iSponsor_DAO;
+import com.beck.crrg_git.crrg.models.Sponsor;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 /******************
  Create the Servlet Viuw/Edit from the Sponsor table
@@ -123,7 +123,7 @@ public class Edit_Sponsor extends HttpServlet{
       errors++;
     }
     try {
-      _newSponsor.setwebsite(_website);
+      _newSponsor.setWebsite(_website);
     } catch(IllegalArgumentException e) {results.put("sponsorwebsiteerror", e.getMessage());
       errors++;
     }
@@ -133,11 +133,11 @@ public class Edit_Sponsor extends HttpServlet{
       errors++;
     }
     try {
-      _newSponsor.setis_active(_oldSponsor.getis_active());
+      _newSponsor.setIs_Active(_oldSponsor.getIs_Active());
     } catch(IllegalArgumentException e) {results.put("sponsoris_activeerror", e.getMessage());
       errors++;
     }
-    _newSponsor.setis_active(true);
+    _newSponsor.setIs_Active(true);
 //to update the database
     int result=0;
     if (errors==0){

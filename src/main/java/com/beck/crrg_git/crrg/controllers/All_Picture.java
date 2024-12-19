@@ -1,22 +1,21 @@
-package com.beck.beck_demos.crrg.controllers;
+package com.beck.crrg_git.crrg.controllers;
 
-import com.beck.beck_demos.crrg.data.Picture_DAO;
-import com.beck.beck_demos.crrg.models.Picture;
-import com.beck.beck_demos.crrg.models.Picture_VM;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.iPicture_DAO;
+import com.beck.crrg_git.crrg.data.Picture_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
+import com.beck.crrg_git.crrg.models.Picture_VM;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 @WebServlet("/all-Pictures")
 public class All_Picture extends HttpServlet {private iPicture_DAO pictureDAO;
   @Override
@@ -24,7 +23,7 @@ public class All_Picture extends HttpServlet {private iPicture_DAO pictureDAO;
     pictureDAO = new Picture_DAO();
   }
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;

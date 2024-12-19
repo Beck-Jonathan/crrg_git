@@ -1,4 +1,4 @@
-package com.beck.beck_demos.crrg.models;
+package com.beck.crrg_git.crrg.models;
 
 /**
  * @ author Jonathan Beck

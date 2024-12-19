@@ -1,4 +1,4 @@
-package com.beck.beck_demos.crrg.models;
+package com.beck.crrg_git.crrg.models;
 
 public class Album_VM extends Album{
   private int album_size;

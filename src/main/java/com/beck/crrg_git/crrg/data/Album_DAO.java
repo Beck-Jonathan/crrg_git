@@ -1,8 +1,8 @@
-package com.beck.beck_demos.crrg.data;
+package com.beck.crrg_git.crrg.data;
 
-import com.beck.beck_demos.crrg.data_interfaces.iAlbum_DAO;
-import com.beck.beck_demos.crrg.models.Album;
-import com.beck.beck_demos.crrg.models.Album_VM;
+import com.beck.crrg_git.crrg.data_interfaces.iAlbum_DAO;
+import com.beck.crrg_git.crrg.models.Album;
+import com.beck.crrg_git.crrg.models.Album_VM;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.beck.beck_demos.crrg.data.Database.getConnection;
+import static com.beck.crrg_git.crrg.data.Database.getConnection;
 
 public class Album_DAO implements iAlbum_DAO{
   @Override

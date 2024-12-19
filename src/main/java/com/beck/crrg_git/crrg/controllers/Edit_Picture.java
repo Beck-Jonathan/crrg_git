@@ -1,20 +1,22 @@
-package com.beck.beck_demos.crrg.controllers;
-import com.beck.beck_demos.crrg.data.Album_DAO;
-import com.beck.beck_demos.crrg.data.Contributor_DAO;
-import com.beck.beck_demos.crrg.data.Picture_DAO;
-import com.beck.beck_demos.crrg.models.Album;
-import com.beck.beck_demos.crrg.models.Contributor;
-import com.beck.beck_demos.crrg.models.Picture;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.iPicture_DAO;
-import com.beck.beck_demos.crrg.data_interfaces.iAlbum_DAO;
-import com.beck.beck_demos.crrg.data_interfaces.iContributor_DAO;
+package com.beck.crrg_git.crrg.controllers;
+
+import com.beck.crrg_git.crrg.data.Album_DAO;
+import com.beck.crrg_git.crrg.data.Contributor_DAO;
+import com.beck.crrg_git.crrg.data.Picture_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iAlbum_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
+import com.beck.crrg_git.crrg.models.Album;
+import com.beck.crrg_git.crrg.models.Contributor;
+import com.beck.crrg_git.crrg.models.Picture;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -147,7 +149,7 @@ public class Edit_Picture extends HttpServlet{
     }
 
     try {
-      _newPicture.setdescription(_description);
+      _newPicture.setDescription(_description);
     } catch(IllegalArgumentException e) {results.put("picturedescriptionerror", e.getMessage());
       errors++;
     }

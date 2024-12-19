@@ -1,14 +1,16 @@
-package com.beck.beck_demos.crrg.controllers;
-import com.beck.beck_demos.crrg.data.Contributor_DAO;
-import com.beck.beck_demos.crrg.models.Contributor;
-import com.beck.beck_demos.crrg.models.User;
-import com.beck.beck_demos.crrg.data_interfaces.iContributor_DAO;
+package com.beck.crrg_git.crrg.controllers;
+
+import com.beck.crrg_git.crrg.data.Contributor_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
+import com.beck.crrg_git.crrg.models.Contributor;
+import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -103,7 +105,7 @@ public class Edit_Contributor extends HttpServlet{
       errors++;
     }
     try {
-      _newContributor.setemail(_email);
+      _newContributor.setEmail(_email);
     } catch(IllegalArgumentException e) {results.put("contributoremailerror", e.getMessage());
       errors++;
     }

@@ -1,6 +1,4 @@
-package com.beck.beck_demos.crrg.models;
-
-import java.util.List;
+package com.beck.crrg_git.crrg.models;
 
 public class Sponsor_Tag_VM extends Sponsor_Tag{
   private Picture Picture;
@@ -13,11 +11,11 @@ public class Sponsor_Tag_VM extends Sponsor_Tag{
 
   }
 
-  public com.beck.beck_demos.crrg.models.Picture getPicture() {
+  public com.beck.crrg_git.crrg.models.Picture getPicture() {
     return Picture;
   }
 
-  public void setPicture(com.beck.beck_demos.crrg.models.Picture picture) {
+  public void setPicture(com.beck.crrg_git.crrg.models.Picture picture) {
     Picture = picture;
   }
 }

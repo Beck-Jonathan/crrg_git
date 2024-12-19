@@ -1,4 +1,4 @@
-package com.beck.beck_demos.crrg.data;
+package com.beck.crrg_git.crrg.data;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
