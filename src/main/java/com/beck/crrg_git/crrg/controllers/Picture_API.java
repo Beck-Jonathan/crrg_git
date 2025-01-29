@@ -1,20 +1,24 @@
 package com.beck.crrg_git.crrg.controllers;
 
 import com.beck.crrg_git.crrg.data.Picture_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
 import com.beck.crrg_git.crrg.models.Picture;
+import com.beck.crrg_git.crrg.models.Picture_VM;
+import com.beck.crrg_git.crrg.models.User;
+import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 @WebServlet("/Picture_by_album")
 public class Picture_API extends HttpServlet {
   private iPicture_DAO pictureDAO;

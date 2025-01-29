@@ -1,11 +1,14 @@
 package com.beck.crrg_git.crrg.models;
+
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @ author Jonathan Beck
  * @ version 1.0
  * @ since 1.0
  */
 
-public class Album {
+public class Album implements Comparable<Album> {
   private Integer Album_ID;
   private String Album_Name;
   private boolean Is_Active;
@@ -53,5 +56,29 @@ public class Album {
     this.Is_Active = Is_Active;
   }
 
+
+
+  @Override
+  public int compareTo(@NotNull Album o) {
+    if (this.Album_ID.compareTo(o.Album_ID)<0){
+      return -1;
+    }
+    else if(this.Album_ID.compareTo(o.Album_ID) > 0){
+      return 1;
+    }
+    if (this.Album_Name.compareTo(o.Album_Name)<0){
+      return -1;
+    }
+    else if(this.Album_Name.compareTo(o.Album_Name) > 0){
+      return 1;
+    }
+    if (!this.Is_Active&&o.Is_Active){
+      return -1;
+    }
+    if (this.Is_Active&&!o.Is_Active){
+      return 1;
+    }
+    return 0;
+  }
 }
 

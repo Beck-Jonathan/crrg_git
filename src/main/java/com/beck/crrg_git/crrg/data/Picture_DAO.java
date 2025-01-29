@@ -11,7 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.time.LocalDate;
 
+import java.sql.SQLException;
+import java.util.List;
 import static com.beck.crrg_git.crrg.data.Database.getConnection;
 
 public class Picture_DAO implements iPicture_DAO{

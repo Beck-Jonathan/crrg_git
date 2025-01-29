@@ -1,38 +1,34 @@
 package com.beck.crrg_git.crrg.controllers;
 
-import com.beck.crrg_git.crrg.data.Album_DAO;
-import com.beck.crrg_git.crrg.data.Contributor_DAO;
+
+
+
 import com.beck.crrg_git.crrg.data.Picture_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iAlbum_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
+import com.beck.crrg_git.crrg.data.Contributor_DAO;
+import com.beck.crrg_git.crrg.data.Album_DAO;
 import com.beck.crrg_git.crrg.models.*;
+import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iAlbum_DAO;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.*;
+
 import org.apache.commons.fileupload2.core.DiskFileItem;
 import org.apache.commons.fileupload2.jakarta.JakartaServletDiskFileUpload;
 import org.apache.commons.io.IOUtils;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /******************
  Create the Servlet  For adding to The  Picture table
@@ -61,6 +57,11 @@ public class Add_Picture extends HttpServlet{
     contributorDAO = new Contributor_DAO();
     albumDAO = new Album_DAO();
   }
+  public void init(iPicture_DAO pictureDAO,iAlbum_DAO albumDAO,iContributor_DAO contributorDAO){
+    this.pictureDAO = pictureDAO;
+    this.albumDAO = albumDAO;
+    this.contributorDAO = contributorDAO;
+  }
 
   @Override
   public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -73,7 +74,7 @@ public class Add_Picture extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
 
@@ -101,7 +102,7 @@ public class Add_Picture extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
     try {
@@ -115,7 +116,7 @@ public class Add_Picture extends HttpServlet{
 
     List<File> files = new ArrayList<>();
     JakartaServletDiskFileUpload upload = new JakartaServletDiskFileUpload();
-    ServletContext servletContext = this.getServletConfig().getServletContext();
+    //ServletContext servletContext = this.getServletConfig().getServletContext();
     List<DiskFileItem> items = upload.parseRequest(req);
 
     String applicationPath = req.getServletContext().getRealPath("");
@@ -243,7 +244,7 @@ public class Add_Picture extends HttpServlet{
           file.delete();
         }
       } catch (Exception ex) {
-        results.put("dbStatus", ex.getMessage());
+        results.put("dbError", ex.getMessage());
         req.setAttribute("results", results);
         req.setAttribute("pageTitle", "Add Picture");
         req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
@@ -258,7 +259,7 @@ public class Add_Picture extends HttpServlet{
         try {
           result = pictureDAO.add(picture);
         } catch (Exception ex) {
-          results.put("dbStatus", "Database Error");
+          results.put("dbError", "Database Error");
         }
         if (result > 0) {
 

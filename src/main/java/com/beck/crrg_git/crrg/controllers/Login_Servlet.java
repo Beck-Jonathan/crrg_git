@@ -1,8 +1,10 @@
 package com.beck.crrg_git.crrg.controllers;
 
 import com.beck.crrg_git.crrg.data.User_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
 import com.beck.crrg_git.crrg.models.User;
+
+
+import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,8 +15,7 @@ import org.joda.time.DateTime;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet("/crrgLogin")
 public class Login_Servlet extends HttpServlet {
@@ -22,6 +23,9 @@ public class Login_Servlet extends HttpServlet {
   @Override
   public void init() throws ServletException{
     userDAO = new User_DAO();
+  }
+  public void init(iUser_DAO userDAO){
+    this.userDAO = userDAO;
   }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -59,12 +63,14 @@ public class Login_Servlet extends HttpServlet {
       _User_ID=_User_ID.trim();
       user.setUser_ID(_User_ID);
 
-    } catch(Exception e) {results.put("userUser_IDerror", e.getMessage());
+    } catch(Exception e) {
+      results.put("userUser_IDerror", e.getMessage());
       errors++;
     }
     try {
       user.setPassword(_Password.toCharArray());
-    } catch(Exception e) {results.put("userPassworderror", e.getMessage());
+    } catch(Exception e) {
+      results.put("userPassworderror", e.getMessage());
       errors++;
     }
 
@@ -86,11 +92,10 @@ public class Login_Servlet extends HttpServlet {
 
         }
         else{
-          int x=0;
-
+          results.put("userPassworderror", "Incorrect Password.");
         }
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
         results.put("dbStatus","Logged In!");

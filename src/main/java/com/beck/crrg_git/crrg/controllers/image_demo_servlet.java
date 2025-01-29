@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
-@WebServlet("/crrg")
+@WebServlet(name = "helloServlet" , value = "/")
 public class image_demo_servlet extends HttpServlet {
   static List<Album> allAlbums;
   static List<Picture> allPictures;

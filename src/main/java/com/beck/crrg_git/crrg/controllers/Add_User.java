@@ -1,8 +1,11 @@
 package com.beck.crrg_git.crrg.controllers;
 
+
 import com.beck.crrg_git.crrg.data.User_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
 import com.beck.crrg_git.crrg.models.User;
+import com.beck.crrg_git.crrg.models.User;
+import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

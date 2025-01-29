@@ -1,6 +1,7 @@
 package com.beck.crrg_git.crrg.controllers;
 
-import com.cloudinary.Cloudinary;
+
+import com.cloudinary.*;
 import com.cloudinary.utils.ObjectUtils;
 import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.servlet.ServletException;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Map;
 

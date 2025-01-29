@@ -3,8 +3,10 @@ package com.beck.crrg_git.crrg.models;
 import com.beck.crrg_git.crrg.shared.MyValidators;
 import org.joda.time.DateTime;
 
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @ author Jonathan Beck
@@ -12,7 +14,7 @@ import java.util.regex.Matcher;
  * @ since 1.0
  */
 
-public class User {
+public class User implements Comparable<User>{
   private String User_ID;
   private String Role_ID;
   private String First_Name;
@@ -142,6 +144,47 @@ public class User {
       }
     }
     return result;
+  }
+  @Override
+  public int compareTo(@NotNull User o) {
+    if (this.User_ID.compareTo(o.User_ID)<0){
+      return -1;
+    }
+    else if(this.User_ID.compareTo(o.User_ID) > 0){
+      return 1;
+    }
+    if (this.Role_ID.compareTo(o.Role_ID)<0){
+      return -1;
+    }
+    else if(this.Role_ID.compareTo(o.Role_ID) > 0){
+      return 1;
+    }
+    if (this.First_Name.compareTo(o.First_Name)<0){
+      return -1;
+    }
+    else if(this.First_Name.compareTo(o.First_Name) > 0){
+      return 1;
+    }
+    if (this.Last_Name.compareTo(o.Last_Name)<0){
+      return -1;
+    }
+    else if(this.Last_Name.compareTo(o.Last_Name) > 0){
+      return 1;
+    }
+    if (this.Email.compareTo(o.Email)<0){
+      return -1;
+    }
+    else if(this.Email.compareTo(o.Email) > 0){
+      return 1;
+    }
+    if (this.Last_Logged_In.compareTo(o.Last_Logged_In)<0){
+      return -1;
+    }
+    else if(this.Last_Logged_In.compareTo(o.Last_Logged_In) > 0){
+      return 1;
+    }
+
+    return 0;
   }
 
 }

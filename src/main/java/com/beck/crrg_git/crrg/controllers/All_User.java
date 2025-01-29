@@ -4,29 +4,35 @@ package com.beck.crrg_git.crrg.controllers;
  Created By Jonathan Beck 10/15/2024
  ***************/
 
-import com.beck.crrg_git.crrg.data.User_DAO;
 import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
+import com.beck.crrg_git.crrg.data.User_DAO;
 import com.beck.crrg_git.crrg.models.User;
+import com.beck.crrg_git.crrg.models.User;
+import com.beck.crrg_git.crrg.data_interfaces.iUser_DAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
-@WebServlet("/allCrrgUser")
+import java.util.Map;
+@WebServlet("/all-Users")
 public class All_User extends HttpServlet {
-  static List<String> allRoles ;
   private iUser_DAO userDAO;
+
   @Override
-  public void init() throws ServletException{
+  public void init() {
     userDAO = new User_DAO();
-    List<String> allRoles;
+
+  }
+  public void init(iUser_DAO userDAO){
+    this.userDAO = userDAO;
+
   }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,6 +53,7 @@ public class All_User extends HttpServlet {
     session.setAttribute("currentPage",req.getRequestURL());
     List<User> users = null;
 
+    List<String> allRoles;
     try {
       users =userDAO.getAllUser(20,0, null);
       allRoles = userDAO.getDistinctRoleForDropdown();

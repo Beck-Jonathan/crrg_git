@@ -6,16 +6,15 @@ package com.beck.crrg_git.crrg.controllers;
  ***************/
 
 import com.beck.crrg_git.crrg.data.Sponsor_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iSponsor_DAO;
 import com.beck.crrg_git.crrg.models.Sponsor;
 import com.beck.crrg_git.crrg.models.User;
+import com.beck.crrg_git.crrg.data_interfaces.iSponsor_DAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,6 +28,9 @@ public class Delete_Sponsor extends HttpServlet {
   public void init() throws ServletException{
     sponsorDAO = new Sponsor_DAO();
   }
+  public void init(iSponsor_DAO _sponsorDAO){
+    sponsorDAO = _sponsorDAO;
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     Map<String, String> results = new HashMap<>();
@@ -41,14 +43,20 @@ public class Delete_Sponsor extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
+      resp.sendRedirect("/crrgLogin");return;
+
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Delete Sponsor");
+
     String SponsorID = req.getParameter("sponsorid");
-    int mode = Integer.valueOf(req.getParameter("mode"));
+    String _mode = req.getParameter("mode");
+    int mode =-1;
+    if (_mode!=null){
+      mode = Integer.valueOf(_mode);
+    }
+
     int result = 0;
     if (mode==0){
       try{
@@ -58,7 +66,7 @@ public class Delete_Sponsor extends HttpServlet {
         results.put("dbStatus",ex.getMessage());
       }
     }
-    else {
+    else if (mode==1){
       try{
         result = sponsorDAO.undeleteSponsor(SponsorID);
       }
@@ -70,8 +78,9 @@ public class Delete_Sponsor extends HttpServlet {
     try {
       sponsors = sponsorDAO.getAllSponsor("");
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      results.put("dbStatus",e.getMessage());
     }
+    req.setAttribute("result",result);
     req.setAttribute("results",results);
     req.setAttribute("Sponsors", sponsors);
     req.setAttribute("pageTitle", "All Sponsor");

@@ -1,12 +1,12 @@
 package com.beck.crrg_git.crrg.models;
-
+import org.jetbrains.annotations.NotNull;
 /**
  * @ author Jonathan Beck
  * @ version 1.0
  * @ since 1.0
  */
 
-public class Picture {
+public class Picture implements Comparable<Picture>{
   private Integer Picture_ID;
   private Integer Album_ID;
   private Integer Contributor_ID;
@@ -98,6 +98,53 @@ public class Picture {
   }
   public void setis_Approved(boolean is_Approved) {
     this.is_Approved = is_Approved;
+  }
+
+  @Override
+  public int compareTo(@NotNull Picture o) {
+    if (this.Picture_ID.compareTo(o.Picture_ID)<0){
+      return -1;
+    }
+    else if(this.Picture_ID.compareTo(o.Picture_ID) > 0){
+      return 1;
+    }
+    if (this.Album_ID.compareTo(o.Album_ID)<0){
+      return -1;
+    }
+    else if(this.Album_ID.compareTo(o.Album_ID) > 0){
+      return 1;
+    }
+    if (this.Contributor_ID.compareTo(o.Contributor_ID)<0){
+      return -1;
+    }
+    else if(this.Contributor_ID.compareTo(o.Contributor_ID) > 0){
+      return 1;
+    }
+    if (this.Web_Address.compareTo(o.Web_Address)<0){
+      return -1;
+    }
+    else if(this.Web_Address.compareTo(o.Web_Address) > 0){
+      return 1;
+    }
+    if (this.Description.compareTo(o.Description)<0){
+      return -1;
+    }
+    else if(this.Description.compareTo(o.Description) > 0){
+      return 1;
+    }
+    if (!this.Is_Active&&o.Is_Active){
+      return -1;
+    }
+    if (this.Is_Active&&!o.Is_Active){
+      return 1;
+    }
+    if (!this.is_Approved&&o.is_Approved){
+      return -1;
+    }
+    if (this.is_Approved&&!o.is_Approved){
+      return 1;
+    }
+    return 0;
   }
 
 }

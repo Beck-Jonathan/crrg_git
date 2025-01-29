@@ -6,11 +6,12 @@ import com.beck.crrg_git.crrg.models.Sponsor_VM;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Sponsor_DAO_Fake implements iSponsor_DAO {
-  private static List<Sponsor_VM> sponsorVMs;
-  static{
+  private List<Sponsor_VM> sponsorVMs;
+  public Sponsor_DAO_Fake(){
     sponsorVMs = new ArrayList<>();
     Sponsor sponsor0 = new Sponsor("nrCUTMuU", "yiViZWSS", "BqFtNIud", "jILWEalH", true);
     Sponsor sponsor1 = new Sponsor("nlSjPWct", "yiViZWSS", "hdyNtCno", "MLsJXJIt", true);
@@ -48,9 +49,16 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
     sponsorVMs.add(sponsor_VM9);
     sponsorVMs.add(sponsor_VM10);
     sponsorVMs.add(sponsor_VM11);
+    Collections.sort(sponsorVMs);
   }
   @Override
   public int add(Sponsor _sponsor) throws SQLException {
+    if (duplicateKey(_sponsor)){
+      return 0;
+    }
+    if (exceptionKey(_sponsor)){
+      throw new SQLException("error");
+    }
     int size = sponsorVMs.size();
     Sponsor_VM sponsor_VM = new Sponsor_VM(_sponsor);
     sponsorVMs.add(sponsor_VM);
@@ -70,12 +78,19 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
   }
 
   @Override
-  public List<Sponsor> getAllSponsor(String Order_By) throws SQLException {
+  public List<Sponsor> getAllSponsor(String Tier_ID) throws SQLException {
     List<Sponsor> results = new ArrayList<>();
-    for (Sponsor_VM sponsor : sponsorVMs){
+    if (Tier_ID==null){
+      results.addAll(sponsorVMs);
 
-        results.add(sponsor);
+    }
+    else {
+      for (Sponsor_VM sponsor : sponsorVMs) {
+        if (sponsor.getTier_ID().equals(Tier_ID)) {
+          results.add(sponsor);
+        }
 
+      }
     }
     return results;
   }
@@ -93,33 +108,45 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
   public int deactivateSponsor(String Sponsor_ID) throws SQLException {
     int location =-1;
     for (int i=0;i<sponsorVMs.size();i++){
-      if (sponsorVMs.get(i).getSponsor_ID().equals(Sponsor_ID)&&sponsorVMs.get(i).getIs_Active()){
+      if (sponsorVMs.get(i).getSponsor_ID().equals(Sponsor_ID)){
         location =i;
         break;
       }
     }
     if (location==-1){
-      throw new SQLException();
+      throw new SQLException("Unable To Find Sponsor.");
     }
-    sponsorVMs.get(location).setIs_Active(false);
-    return 1;
+    if(sponsorVMs.get(location).getIs_Active()){
+      sponsorVMs.get(location).setIs_Active(false);
+      return 1;
+    }
+    else {
+      return 0;
+    }
   }
 
   @Override
   public int undeleteSponsor(String Sponsor_ID) throws SQLException {
     int location =-1;
     for (int i=0;i<sponsorVMs.size();i++){
-      if (sponsorVMs.get(i).getSponsor_ID().equals(Sponsor_ID)&&!sponsorVMs.get(i).getIs_Active()){
+      if (sponsorVMs.get(i).getSponsor_ID().equals(Sponsor_ID)){
         location =i;
         break;
       }
     }
     if (location==-1){
-      throw new SQLException();
+      throw new SQLException("Unable To Find Sponsor.");
     }
-    sponsorVMs.get(location).setIs_Active(true);
-    return 1;
+    if(!sponsorVMs.get(location).getIs_Active()){
+      sponsorVMs.get(location).setIs_Active(true);
+      return 1;
+    }
+    else {
+      return 0;
+    }
   }
+
+
 
   @Override
   public List<String> selectAllTiersForDropDown() throws SQLException {
@@ -150,6 +177,12 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
   @Override
   public int update(Sponsor oldSponsor, Sponsor newSponsor) throws SQLException{
     int location =-1;
+    if (exceptionKey(oldSponsor)){
+      throw new SQLException("error");
+    }
+    if (duplicateKey(oldSponsor)){
+      return 0;
+    }
     for (int i=0;i<sponsorVMs.size();i++){
       if (sponsorVMs.get(i).getSponsor_ID().equals(oldSponsor.getSponsor_ID())){
         location =i;
@@ -162,5 +195,12 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
     Sponsor_VM updated = new Sponsor_VM(newSponsor);
     sponsorVMs.set(location,updated);
     return 1;
+  }
+
+  private boolean duplicateKey(Sponsor _sponsor){
+    return _sponsor.getSponsor_ID().equals("DUPLICATE");
+  }
+  private boolean exceptionKey(Sponsor _sponsor){
+    return _sponsor.getSponsor_ID().equals("EXCEPTION");
   }
 }

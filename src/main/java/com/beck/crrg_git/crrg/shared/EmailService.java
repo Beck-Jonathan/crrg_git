@@ -1,5 +1,4 @@
 package com.beck.crrg_git.crrg.shared;
-
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.simpleemail.AmazonSimpleEmailService;

@@ -3,6 +3,7 @@ package com.beck.crrg_git.crrg.models;
 import com.beck.crrg_git.crrg.shared.MyValidators;
 
 import java.util.regex.Matcher;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @ author Jonathan Beck
@@ -10,7 +11,7 @@ import java.util.regex.Matcher;
  * @ since 1.0
  */
 
-public class Contributor {
+public class Contributor implements Comparable<Contributor>{
   private Integer Contributor_ID;
   private String First_Name;
   private String Last_Name;
@@ -75,6 +76,34 @@ public class Contributor {
       throw new IllegalArgumentException("Invalid email");
     }
     this.Email =email;
+  }
+  @Override
+  public int compareTo(@NotNull Contributor o) {
+    if (this.Contributor_ID.compareTo(o.Contributor_ID)<0){
+      return -1;
+    }
+    else if(this.Contributor_ID.compareTo(o.Contributor_ID) > 0){
+      return 1;
+    }
+    if (this.First_Name.compareTo(o.First_Name)<0){
+      return -1;
+    }
+    else if(this.First_Name.compareTo(o.First_Name) > 0){
+      return 1;
+    }
+    if (this.Last_Name.compareTo(o.Last_Name)<0){
+      return -1;
+    }
+    else if(this.Last_Name.compareTo(o.Last_Name) > 0){
+      return 1;
+    }
+    if (this.Email.compareTo(o.Email)<0){
+      return -1;
+    }
+    else if(this.Email.compareTo(o.Email) > 0){
+      return 1;
+    }
+    return 0;
   }
 
 }

@@ -1,27 +1,31 @@
 package com.beck.crrg_git.crrg.controllers;
-
 import com.beck.crrg_git.crrg.data.Contributor_DAO;
-import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
+import com.beck.crrg_git.crrg.models.Contributor;
 import com.beck.crrg_git.crrg.models.Contributor_VM;
 import com.beck.crrg_git.crrg.models.User;
+import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 @WebServlet("/all-Contributors")
 public class All_Contributor extends HttpServlet {
   private iContributor_DAO contributorDAO;
   @Override
   public void init() throws ServletException{
     contributorDAO = new Contributor_DAO();
+  }
+
+  public void init(iContributor_DAO contributorDAO){
+    this.contributorDAO = contributorDAO;
   }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -34,7 +38,7 @@ public class All_Contributor extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      resp.sendRedirect("/crrgLogin");
       return;
     }
 

@@ -1,12 +1,12 @@
 package com.beck.crrg_git.crrg.models;
-
+import org.jetbrains.annotations.NotNull;
 /**
  * @ author Jonathan Beck
  * @ version 1.0
  * @ since 1.0
  */
 
-public class Sponsor {
+public class Sponsor implements Comparable<Sponsor>{
   private String Sponsor_ID;
   private String Tier_ID;
   private String Website;
@@ -85,6 +85,40 @@ public class Sponsor {
   }
   public void setIs_Active(boolean is_Active) {
     this.Is_Active = is_Active;
+  }
+  @Override
+  public int compareTo(@NotNull Sponsor o) {
+    if (this.Sponsor_ID.compareTo(o.Sponsor_ID)<0){
+      return -1;
+    }
+    else if(this.Sponsor_ID.compareTo(o.Sponsor_ID) > 0){
+      return 1;
+    }
+    if (this.Tier_ID.compareTo(o.Tier_ID)<0){
+      return -1;
+    }
+    else if(this.Tier_ID.compareTo(o.Tier_ID) > 0){
+      return 1;
+    }
+    if (this.Website.compareTo(o.Website)<0){
+      return -1;
+    }
+    else if(this.Website.compareTo(o.Website) > 0){
+      return 1;
+    }
+    if (this.Description.compareTo(o.Description)<0){
+      return -1;
+    }
+    else if(this.Description.compareTo(o.Description) > 0){
+      return 1;
+    }
+    if (!this.Is_Active&&o.Is_Active){
+      return -1;
+    }
+    if (this.Is_Active&&!o.Is_Active){
+      return 1;
+    }
+    return 0;
   }
 
 }

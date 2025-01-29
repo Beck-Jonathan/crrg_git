@@ -1,5 +1,7 @@
 package com.beck.crrg_git.crrg.models;
 
+import java.util.List;
+
 public class Sponsor_Tag_VM extends Sponsor_Tag{
   private Picture Picture;
   public Sponsor_Tag_VM(Sponsor_Tag sponsor_tag, Picture picture) {
