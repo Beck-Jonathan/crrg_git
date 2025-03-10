@@ -47,7 +47,7 @@ public class Add_Album extends HttpServlet{
 
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Add Album");
-    req.getRequestDispatcher("WEB-INF/WFTDA_debug/AddAlbum.jsp").forward(req, resp);
+    req.getRequestDispatcher("WEB-INF/crrg/AddAlbum.jsp").forward(req, resp);
   }
 
   @Override

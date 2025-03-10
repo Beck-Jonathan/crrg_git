@@ -241,7 +241,7 @@ function change(){
     var currentUrl = window.location.href;
     console.log(currentUrl);
     var endSlash= currentUrl.indexOf("crrg");
-    currentUrl=currentUrl.substring(0,endSlash);
+    //currentUrl=currentUrl.substring(0,endSlash-1);
     console.log(currentUrl);
     getJSON(currentUrl+'/Picture_by_album?album='+selected,
         function(err, data) {
