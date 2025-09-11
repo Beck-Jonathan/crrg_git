@@ -40,7 +40,9 @@ public class Add_Contributor extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
+      return;
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
@@ -59,7 +61,9 @@ public class Add_Contributor extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
+      return;
     }
 
     String _First_Name = req.getParameter("inputcontributorFirst_Name");

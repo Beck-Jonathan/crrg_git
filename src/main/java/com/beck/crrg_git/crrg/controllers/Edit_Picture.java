@@ -55,7 +55,9 @@ public class Edit_Picture extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
+      return;
     }
 
     String mode = req.getParameter("mode");
@@ -73,6 +75,7 @@ public class Edit_Picture extends HttpServlet{
     try{
       picture=picture_DAO.getPictureByPrimaryKey(picture);
     } catch (SQLException e) {
+      picture=new Picture();
       req.setAttribute("dbStatus",e.getMessage());
     }
 
@@ -105,7 +108,9 @@ public class Edit_Picture extends HttpServlet{
     User user = (User)session.getAttribute("User");
 
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
+      return;
     }
 
     Map<String, String> results = new HashMap<>();
@@ -126,6 +131,11 @@ public class Edit_Picture extends HttpServlet{
 //to get the old Picture
 
     Picture _oldPicture= (Picture)session.getAttribute("picture");
+    if (_oldPicture==null){
+      resp.sendRedirect("all-pictures");
+      return;
+    }
+
 //to get the new event's info
     String _Album_ID = req.getParameter("inputpictureAlbum_ID");
     if (_Album_ID!=null){
