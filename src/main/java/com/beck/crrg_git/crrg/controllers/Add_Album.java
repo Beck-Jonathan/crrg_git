@@ -42,7 +42,9 @@ public class Add_Album extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("/crrgLogin");
+      return;
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
@@ -61,7 +63,9 @@ public class Add_Album extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("/crrgLogin");
+      return;
     }
 
     String _Album_Name = req.getParameter("inputalbumAlbum_Name");

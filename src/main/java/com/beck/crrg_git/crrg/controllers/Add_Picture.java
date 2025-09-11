@@ -82,7 +82,7 @@ public class Add_Picture extends HttpServlet{
     req.setAttribute("pageTitle", "Add Picture");
 
     try {
-      allAlbums = albumDAO.getAllAlbum(20,0);
+      allAlbums = albumDAO.getAllAlbum(20,0,"");
       allContributors = contributorDAO.getAllContributor(20,0);
     } catch (SQLException e) {
       throw new RuntimeException(e);
@@ -106,7 +106,7 @@ public class Add_Picture extends HttpServlet{
       return;
     }
     try {
-      allAlbums = albumDAO.getAllAlbum(20,0);
+      allAlbums = albumDAO.getAllAlbum(20,0,"");
       allContributors = contributorDAO.getAllContributor(20,0);
     } catch (SQLException e) {
       throw new RuntimeException(e);

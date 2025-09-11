@@ -47,7 +47,7 @@ public class All_Album_API extends HttpServlet {
     String jsonArray="";
 
     try {
-      albums =albumDAO.getAllAlbum(20,0);
+      albums =albumDAO.getAllAlbum(20,0,"");
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

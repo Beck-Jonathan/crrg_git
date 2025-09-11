@@ -35,7 +35,7 @@ public interface iAlbum_DAO{
    * @return List of Album
    * @author Jonathan Beck
    */
-  List<Album_VM> getAllAlbum(int limit, int offset) throws SQLException;
+  List<Album_VM> getAllAlbum(int limit, int offset, String search) throws SQLException;
 
   Album_VM getAlbumByPrimaryKey(Album _album) throws SQLException;
 
@@ -47,6 +47,8 @@ public interface iAlbum_DAO{
   List<Album> getDistinctAlbumForDropdown() throws SQLException;
 
   int changeActivation(int albumID, int status) throws SQLException;
+
+  int getAlbumCount(String Search_term) throws SQLException;
 
 }
 

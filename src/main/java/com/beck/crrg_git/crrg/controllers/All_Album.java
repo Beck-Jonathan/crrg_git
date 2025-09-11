@@ -35,20 +35,44 @@ public class All_Album extends HttpServlet {
 //add roles here
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
+    int errors = 0;
+    HashMap<String,String> results = new HashMap<>();
+    int albumcount=0;
+    int page_number=1;
+    int page_size = 20;
+    try {
+      page_number = Integer.parseInt(req.getParameter("page"));
+    } catch (Exception e){
+      page_number=1;
+    }
+    int offset=(page_number-1)*(page_size);
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
+    }
+    String search_term = req.getParameter("search");
+    if (search_term==null){
+      search_term ="";
+    }
+    if (!search_term.equals("") && (search_term.length()<2||search_term.length()>100)){
+      errors++;
+      results.put("searchError","Invalid search term");
     }
 
 //    session.setAttribute("currentPage",req.getRequestURL());
     List<Album_VM> albums = null;
 
     try {
-      albums =albumDAO.getAllAlbum(20,0);
+      albumcount = albumDAO.getAlbumCount(search_term);
+      albums =albumDAO.getAllAlbum(page_size,offset,search_term);
     } catch (SQLException e) {
       albums = new ArrayList<>();
     }
 
+    int total_pages = (albumcount/page_size)+1;
+    req.setAttribute("noOfPages", total_pages);
+    req.setAttribute("currentPage", page_number);
     req.setAttribute("Albums", albums);
     req.setAttribute("pageTitle", "All Albums");
 

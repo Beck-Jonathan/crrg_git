@@ -14,8 +14,8 @@ public class Album_DAO_Fake implements iAlbum_DAO {
   private  List<Album_VM> albums;
    public Album_DAO_Fake() {
      albums = new ArrayList<>();
-     Album album1 = new Album(1, "Test", true);
-     Album album2 = new Album(2, "Test1", true);
+     Album album1 = new Album(1, "Test_hat", true);
+     Album album2 = new Album(2, "Test1_hat", true);
      Album album3 = new Album(3, "Test2", true);
      Album_VM albumVM1 = new Album_VM(album1, 4);
      Album_VM albumVM2 = new Album_VM(album2, 5);
@@ -63,8 +63,14 @@ public class Album_DAO_Fake implements iAlbum_DAO {
   }
 
   @Override
-  public List<Album_VM> getAllAlbum(int limit, int offset) throws SQLException {
-    return albums;
+  public List<Album_VM> getAllAlbum(int limit, int offset, String search_term) throws SQLException {
+    List<Album_VM> results = new ArrayList<>();
+    for (Album_VM album : albums){
+      if (search_term.isEmpty() ||  album.getAlbum_Name().contains(search_term)){
+        results.add(album);
+      }
+    }
+    return results;
   }
 
   @Override
@@ -108,6 +114,19 @@ public class Album_DAO_Fake implements iAlbum_DAO {
     boolean _status = albums.get(location).getIs_Active();
     albums.get(location).setIs_Active(!_status);
     return 1;
+  }
+
+  @Override
+  public int getAlbumCount(String Search_term) throws SQLException {
+    List<Album_VM> results = new ArrayList<>();
+    for (Album_VM album : albums) {
+
+      if (Search_term.isEmpty() || album.getAlbum_Name().contains(Search_term)) {
+        results.add(album);
+
+      }
+    }
+    return results.size();
   }
 
   private boolean duplicateKey(Album _album){

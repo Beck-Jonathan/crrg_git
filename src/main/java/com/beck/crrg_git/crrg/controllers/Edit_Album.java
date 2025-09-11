@@ -45,7 +45,8 @@ public class Edit_Album extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
     }
 
@@ -64,7 +65,10 @@ public class Edit_Album extends HttpServlet{
     try{
       album=albumDAO.getAlbumByPrimaryKey(album);
     } catch (SQLException e) {
+      album=new Album();
       req.setAttribute("dbStatus",e.getMessage());
+      resp.sendRedirect("all-Albums");
+      return;
     }
 
     session.setAttribute("album",album);
@@ -84,7 +88,8 @@ public class Edit_Album extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
     }
 
@@ -95,6 +100,10 @@ public class Edit_Album extends HttpServlet{
 //to get the old Album
 
     Album _oldAlbum= (Album)session.getAttribute("album");
+    if (_oldAlbum==null){
+      resp.sendRedirect("all-albums");
+      return;
+    }
 //to get the new event's info
     String _Album_Name = req.getParameter("inputalbumAlbum_Name");
     if (_Album_Name!=null){
