@@ -53,7 +53,8 @@ public class All_Picture extends HttpServlet {private iPicture_DAO pictureDAO;
     }
 
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
     }
     int page_number = 1;

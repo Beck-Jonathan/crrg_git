@@ -13,8 +13,8 @@ import java.util.List;
 public class Picture_DAO_Fake implements iPicture_DAO {
   private  List<Picture_VM> pictureVMs = new ArrayList<>();
   public Picture_DAO_Fake(){
-    Picture picture0 = new Picture(46, 35, 11, "SDrfoRma", "OiUqprGY", false, true);
-    Picture picture1 = new Picture(37, 35, 24, "PCkmYIjf", "lnktvOjx", false, false);
+    Picture picture0 = new Picture(46, 35, 11, "jCfSDrfoRma", "OiUqprGY", false, true);
+    Picture picture1 = new Picture(37, 35, 24, "jCfPCkmYIjf", "lnktvOjx", false, false);
     Picture picture2 = new Picture(44, 35, 40, "jCfZsjGa", "EmotBsUD", true, false);
     Picture picture3 = new Picture(13, 35, 46, "CFwxKsZl", "OSOCWQfy", false, false);
     Picture picture4 = new Picture(23, 35, 49, "iECUVuwN", "sgviieQU", true, false);
