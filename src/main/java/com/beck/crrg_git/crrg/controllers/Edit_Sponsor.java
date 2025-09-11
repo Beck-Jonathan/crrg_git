@@ -52,7 +52,9 @@ public class Edit_Sponsor extends HttpServlet{
   HttpSession session = req.getSession();
   User user = (User)session.getAttribute("User");
 if (user==null||!user.isInRole(ROLES_NEEDED)){
-    resp.sendRedirect("/crrgLogin");return;
+  session.invalidate();
+    resp.sendRedirect("crrgLogin");
+    return;
   }
 
   String mode = req.getParameter("mode");
@@ -70,8 +72,13 @@ try{
 try{
     sponsor=sponsorDAO.getSponsorByPrimaryKey(sponsor);
   } catch (SQLException e) {
-    req.setAttribute("dbStatus",e.getMessage());
-  }
+  req.setAttribute("dbStatus",e.getMessage());
+  sponsor= null;
+}
+    if (sponsor==null || sponsor.getSponsor_ID()==null){
+      resp.sendRedirect("all-Sponsors");
+      return;
+    }
 
 session.setAttribute("sponsor",sponsor);
 req.setAttribute("mode",mode);
@@ -80,7 +87,9 @@ req.setAttribute("pageTitle", "Edit Sponsor");
     try {
       allTiers = sponsorDAO.selectAllTiersForDropDown();
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      allTiers=new ArrayList<>();
+      resp.sendRedirect("all-Sponsors");
+      return;
     }
     req.setAttribute("Tiers", allTiers);
 req.getRequestDispatcher("WEB-INF/WFTDA_debug/EditSponsor.jsp").forward(req, resp);
@@ -96,7 +105,9 @@ protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws S
   HttpSession session = req.getSession();
   User user = (User)session.getAttribute("User");
   if (user==null||!user.isInRole(ROLES_NEEDED)){
-    resp.sendRedirect("/crrgLogin");return;
+    session.invalidate();
+    resp.sendRedirect("crrgLogin");
+    return;
   }
 
   Map<String, String> results = new HashMap<>();
@@ -105,13 +116,19 @@ protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws S
 //to set the drop downs
   try {
     allTiers = sponsorDAO.selectAllTiersForDropDown();
-  } catch (SQLException e) {
-    throw new RuntimeException(e);
+  } catch (Exception  e) {
+    allTiers=new ArrayList<>();
+    resp.sendRedirect("all-Sponsors");
+    return;
   }
   req.setAttribute("Tiers", allTiers);
 //to get the old Sponsor
 
   Sponsor _oldSponsor= (Sponsor)session.getAttribute("sponsor");
+  if (_oldSponsor==null || _oldSponsor.getSponsor_ID()==null){
+    resp.sendRedirect("all-Sponsors");
+    return;
+  }
 //to get the new event's info
   String _Sponsor_ID = req.getParameter("inputsponsorSponsor_ID");
   if (_Sponsor_ID!=null){

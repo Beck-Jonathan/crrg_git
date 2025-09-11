@@ -41,7 +41,9 @@ public class Edit_Contributor extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
+      return;
     }
 
     String mode = req.getParameter("mode");
@@ -59,7 +61,11 @@ public class Edit_Contributor extends HttpServlet{
     try{
       contributor=contributorDAO.getContributorByPrimaryKey(contributor);
     } catch (SQLException e) {
-      req.setAttribute("dbStatus",e.getMessage());
+      contributor= null;
+    }
+    if (contributor==null || contributor.getContributor_ID()==null){
+      resp.sendRedirect("all-Contributors");
+      return;
     }
 
     session.setAttribute("contributor",contributor);
@@ -79,7 +85,9 @@ public class Edit_Contributor extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");return;
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
+      return;
     }
 
     Map<String, String> results = new HashMap<>();
@@ -89,6 +97,10 @@ public class Edit_Contributor extends HttpServlet{
 //to get the old Contributor
 
     Contributor _oldContributor= (Contributor)session.getAttribute("contributor");
+    if (_oldContributor==null || _oldContributor.getContributor_ID()==null){
+      resp.sendRedirect("all-Contributors");
+      return;
+    }
 //to get the new event's info
     String _First_Name = req.getParameter("inputcontributorFirst_Name");
     if (_First_Name!=null){

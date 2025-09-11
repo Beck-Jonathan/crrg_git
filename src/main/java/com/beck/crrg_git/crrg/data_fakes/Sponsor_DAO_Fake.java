@@ -198,9 +198,10 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
   }
 
   private boolean duplicateKey(Sponsor _sponsor){
-    return _sponsor.getSponsor_ID().equals("DUPLICATE");
+    return _sponsor.getSponsor_ID().equals("DUPLICATE")||_sponsor.getTier_ID().equals("DUPLICATE");
   }
   private boolean exceptionKey(Sponsor _sponsor){
-    return _sponsor.getSponsor_ID().equals("EXCEPTION");
+
+    return _sponsor.getSponsor_ID().equals("EXCEPTION")||_sponsor.getTier_ID().equals("EXCEPTION");
   }
 }
