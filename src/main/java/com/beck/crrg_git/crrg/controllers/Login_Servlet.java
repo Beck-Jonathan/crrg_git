@@ -36,7 +36,8 @@ public class Login_Servlet extends HttpServlet {
       resp.sendRedirect("crrg_management");
       return;
     }
-    session.setAttribute("currentPage",req.getRequestURL());
+    session.invalidate();
+    req.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "Log In!");
     req.getRequestDispatcher("WEB-INF/crrg/Login.jsp").forward(req, resp);
   }
@@ -99,6 +100,7 @@ public class Login_Servlet extends HttpServlet {
       }
       if (result>0){
         results.put("dbStatus","Logged In!");
+        req.setAttribute("results", results);
         resp.sendRedirect("crrg_management");
         return;
       } else {

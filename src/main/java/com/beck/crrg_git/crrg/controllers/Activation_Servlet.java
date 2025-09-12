@@ -53,6 +53,7 @@ public class Activation_Servlet extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
+      session.invalidate();
       resp.sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
     }
@@ -76,7 +77,6 @@ public class Activation_Servlet extends HttpServlet {
         if (object.equals("picture")) {
           result = pictureDAO.changeActivation(ObjectID, mode);
         } else if (object.equals("album")) {
-
           result = albumDAO.changeActivation(ObjectID, mode);
         }
       } catch (Exception ex) {

@@ -15,7 +15,7 @@ public class Album_DAO_Fake implements iAlbum_DAO {
    public Album_DAO_Fake() {
      albums = new ArrayList<>();
      Album album1 = new Album(1, "Test_hat", true);
-     Album album2 = new Album(2, "Test1_hat", true);
+     Album album2 = new Album(2, "Test1_hat", false);
      Album album3 = new Album(3, "Test2", true);
      Album_VM albumVM1 = new Album_VM(album1, 4);
      Album_VM albumVM2 = new Album_VM(album2, 5);
@@ -102,10 +102,13 @@ public class Album_DAO_Fake implements iAlbum_DAO {
   @Override
   public int changeActivation(int albumID, int status) throws SQLException {
     int location =-1;
+    boolean desiredStatus=(status==1);
     for (int i=0;i<albums.size();i++){
-      if (albums.get(i).getAlbum_ID().equals(albumID)){
-        location =i;
-        break;
+      if (albums.get(i).getAlbum_ID().equals(albumID)) {
+        if (desiredStatus != albums.get(i).getIs_Active()) {
+          location = i;
+          break;
+        }
       }
     }
     if (location==-1){

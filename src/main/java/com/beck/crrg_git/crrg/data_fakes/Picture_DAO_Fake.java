@@ -14,14 +14,14 @@ public class Picture_DAO_Fake implements iPicture_DAO {
   private  List<Picture_VM> pictureVMs = new ArrayList<>();
   public Picture_DAO_Fake(){
     Picture picture0 = new Picture(46, 35, 11, "jCfSDrfoRma", "OiUqprGY", false, true);
-    Picture picture1 = new Picture(37, 35, 24, "jCfPCkmYIjf", "lnktvOjx", false, false);
+    Picture picture1 = new Picture(37, 35, 24, "jCfPCkmYIjf", "lnktvOjx", true, false);
     Picture picture2 = new Picture(44, 35, 40, "jCfZsjGa", "EmotBsUD", true, false);
     Picture picture3 = new Picture(13, 35, 46, "CFwxKsZl", "OSOCWQfy", false, false);
     Picture picture4 = new Picture(23, 35, 49, "iECUVuwN", "sgviieQU", true, false);
     Picture picture5 = new Picture(30, 48, 38, "xrlVjHwo", "YNsIUEVR", true, false);
     Picture picture6 = new Picture(31, 32, 38, "ZmnvTeQH", "pOkWrIaW", false, false);
-    Picture picture7 = new Picture(40, 38, 38, "baQLxWVQ", "cDFwYWgh", false, false);
-    Picture picture8 = new Picture(18, 54, 38, "oMsWjaaY", "vRMVDZRc", true, false);
+    Picture picture7 = new Picture(1, 38, 38, "baQLxWVQ", "cDFwYWgh", false, false);
+    Picture picture8 = new Picture(2, 54, 38, "oMsWjaaY", "vRMVDZRc", true, true);
     Picture picture9 = new Picture(32, 16, 38, "voXKHGtO", "JtZoyFHn", false, false);
     Picture picture10 = new Picture(15, 61, 17, "nkDTCUER", "HlesWLbg", true, true);
     Picture picture11 = new Picture(12, 61, 59, "lacZMCbO", "qhdZEmrt", true, false);
@@ -207,11 +207,15 @@ public class Picture_DAO_Fake implements iPicture_DAO {
   @Override
   public int changeApproval(int Picture_ID, int mode) throws SQLException {
     int location =-1;
-    for (int i=0;i<pictureVMs.size();i++){
-      if (pictureVMs.get(i).getPicture_ID().equals(Picture_ID)){
-        location =i;
+    boolean desiredApproval=(mode==1);
+    for (int i=0;i<pictureVMs.size();i++) {
+      if (pictureVMs.get(i).getPicture_ID().equals(Picture_ID)) {
+        if (pictureVMs.get(i).getis_Approved() != desiredApproval) {
+
+        location = i;
         break;
       }
+    }
     }
     if (location==-1){
       throw new SQLException();

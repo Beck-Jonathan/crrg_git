@@ -32,6 +32,10 @@ public class Approval_Servlet extends HttpServlet {
     albumDAO = new Album_DAO();
     pictureDAO = new Picture_DAO();
   }
+  public void init (iAlbum_DAO albumDAO, iPicture_DAO pictureDAO){
+    this.albumDAO = albumDAO;
+    this.pictureDAO = pictureDAO;
+  }
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     Map<String, String> results = new HashMap<>();
@@ -44,6 +48,7 @@ public class Approval_Servlet extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
+      session.invalidate();
       resp.sendError(HttpServletResponse.SC_FORBIDDEN);
       return;
     }
@@ -53,24 +58,33 @@ public class Approval_Servlet extends HttpServlet {
 
     String object = req.getParameter("object");
 
-    int ObjectID = Integer.parseInt(req.getParameter("objectID"));
-    int mode = Integer.parseInt(req.getParameter("mode"));
+
+    int ObjectID = -1;
+    int mode = -1;
+    try {
+      ObjectID = Integer.parseInt(req.getParameter("objectID"));
+      mode = Integer.parseInt(req.getParameter("mode"));
+    } catch (Exception e){
+      ObjectID = -1;
+      mode = -1;
+    }
+
+
 
     int result = 0;
+    if (ObjectID>0&&mode>=0) {
+      try {
+        if (object.equals("picture")) {
+          result = pictureDAO.changeApproval(ObjectID, mode);
+        } else if (object.equals("album")) {
 
-    try{
-      if (object.equals("picture")){
-        result = pictureDAO.changeApproval(ObjectID, mode);
-      } else if (object.equals("album")) {
-
-        //result = albumDAO.changeApproval(ObjectID, mode);
+          //result = albumDAO.changeApproval(ObjectID, mode);
+        }
+      } catch (Exception ex) {
+        results.put("dbStatus", ex.getMessage());
       }
     }
-    catch(Exception ex){
-      results.put("dbStatus",ex.getMessage());
-    }
-
-
+    req.setAttribute("result",result);
 
     resp.setContentType("text/plain");
     resp.getWriter().write(result);

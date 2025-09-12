@@ -36,7 +36,7 @@ class Logout_ServletTest {
     rd=null;
   }
   @Test
-  public void TestLoggedInUserGets302OnDoGetAndSessionIsInvalid() throws ServletException, IOException{
+  public void TestLoggedInUserGets302OnDoGetAndSessionIsNull() throws ServletException, IOException{
     User user = new User();
     user.setRole_ID("Jonathan");
     session.setAttribute("User",user);
@@ -44,17 +44,17 @@ class Logout_ServletTest {
     servlet.doGet(request,response);
     int status = response.getStatus();
     assertEquals(302,status);
-    boolean isInvalid = request.isRequestedSessionIdValid();
-    assertTrue(isInvalid);
+    session = request.getSession(false);
+    assertNull(session);
 
   }
   @Test
-  public void TestLoggeOutUserGets302OnDoGetAndSessionIsInvalid() throws ServletException, IOException{
+  public void TestLoggeOutUserGets302OnDoGetAndSessionIsNull() throws ServletException, IOException{
     servlet.doGet(request,response);
     int status = response.getStatus();
     assertEquals(302,status);
-    boolean isInvalid = request.isRequestedSessionIdValid();
-    assertTrue(isInvalid);
+    session = request.getSession(false);
+    assertNull(session);
   }
 
 }
