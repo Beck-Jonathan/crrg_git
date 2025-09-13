@@ -69,7 +69,7 @@ public class User_DAO_Fake implements iUser_DAO {
   public List<User> getAllUser(int limit, int offset, String Role_ID) throws SQLException {
     List<User> results = new ArrayList<>();
     for (User user : users){
-      if ((user.getRole_ID()!=null||user.getRole_ID().equals(Role_ID)))
+      if ((Role_ID.isEmpty()||user.getRole_ID().equals(Role_ID)))
       {
         results.add(user);
       }

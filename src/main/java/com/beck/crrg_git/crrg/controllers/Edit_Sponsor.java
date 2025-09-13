@@ -26,20 +26,16 @@ import java.util.Map;
 public class Edit_Sponsor extends HttpServlet{
 
   private iSponsor_DAO sponsorDAO;
-  static List<String> allTiers;
+
 
   @Override
   public void init() throws ServletException{
     sponsorDAO = new Sponsor_DAO();
-    try {
-      allTiers= sponsorDAO.selectAllTiersForDropDown();
-    } catch (SQLException e) {
-      throw new RuntimeException(e);
-    }
+
   }
   public void init(iSponsor_DAO sponsorDAO) throws SQLException {
     this.sponsorDAO = sponsorDAO;
-    allTiers= sponsorDAO.selectAllTiersForDropDown();
+
   }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -56,7 +52,7 @@ if (user==null||!user.isInRole(ROLES_NEEDED)){
     resp.sendRedirect("crrgLogin");
     return;
   }
-
+    List<String> allTiers;
   String mode = req.getParameter("mode");
   String primaryKey = "";
 try{
@@ -70,6 +66,7 @@ try{
     req.setAttribute("dbStatus",e.getMessage());
   }
 try{
+
     sponsor=sponsorDAO.getSponsorByPrimaryKey(sponsor);
   } catch (SQLException e) {
   req.setAttribute("dbStatus",e.getMessage());
@@ -109,7 +106,7 @@ protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws S
     resp.sendRedirect("crrgLogin");
     return;
   }
-
+  List<String> allTiers;
   Map<String, String> results = new HashMap<>();
   String mode = req.getParameter("mode");
   req.setAttribute("mode",mode);

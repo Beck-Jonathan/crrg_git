@@ -17,24 +17,32 @@ import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet(name = "helloServlet" , value = "/")
 public class image_demo_servlet extends HttpServlet {
-  static List<Album> allAlbums;
-  static List<Picture> allPictures;
-  static iAlbum_DAO album_DAO = new Album_DAO();
-  static iPicture_DAO picture_DAO = new Picture_DAO();
+  private iAlbum_DAO album_DAO ;
+  private iPicture_DAO picture_DAO;
   @Override
   public void init() throws ServletException{
-
+    album_DAO = new Album_DAO();
+    picture_DAO = new Picture_DAO();
+  }
+  public void init(iAlbum_DAO album_DAO,iPicture_DAO picture_DAO){
+    this.album_DAO = album_DAO;
+    this.picture_DAO = picture_DAO;
   }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     HttpSession session = req.getSession();
+    List<Album> allAlbums;
+    List<Picture> allPictures;
+
     try {
+
       allAlbums = album_DAO.getDistinctAlbumForDropdown();
-      for (int i =0;i<allAlbums.size();i++ ) {
+      for (int i = 0; i< allAlbums.size(); i++ ) {
         if (allAlbums.get(i).getAlbum_Name().equalsIgnoreCase("sponsor")) {
           int spot = i;
           Album sponsors = allAlbums.get(i);
@@ -45,7 +53,7 @@ public class image_demo_servlet extends HttpServlet {
 
         }
       }
-      for (int i =0;i<allAlbums.size();i++ ) {
+      for (int i = 0; i< allAlbums.size(); i++ ) {
         if (allAlbums.get(i).getAlbum_Name().equalsIgnoreCase("teammembers")) {
           int spot = i;
           Album roster = allAlbums.get(i);
@@ -57,7 +65,10 @@ public class image_demo_servlet extends HttpServlet {
       }
       allPictures = picture_DAO.getActivePicturebyAlbum(allAlbums.get(0).getAlbum_ID());
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      allAlbums = new ArrayList<>();
+      allPictures = new ArrayList<>();
+      resp.sendRedirect("//www.crrollerderby.com");
+      return;
     }
 
 
@@ -69,8 +80,5 @@ public class image_demo_servlet extends HttpServlet {
     req.getRequestDispatcher("WEB-INF/crrg/images.jsp").forward(req, resp);
   }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    super.doPost(req, resp);
-  }
+
 }

@@ -29,11 +29,5 @@ public class site_management_servlet extends HttpServlet {
     req.getRequestDispatcher("WEB-INF/crrg/site_management.jsp").forward(req, resp);
   }
 
-  @Override
-  protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    HttpSession session = req.getSession();
-    session.setAttribute("currentPage",req.getRequestURL());
-    req.setAttribute("pageTitle", "Admin Panel");
-    req.getRequestDispatcher("WEB-INF/crrg/site_management.jsp").forward(req, resp);
-  }
+
 }

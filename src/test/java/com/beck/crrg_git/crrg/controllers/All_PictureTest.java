@@ -122,7 +122,7 @@ public class All_PictureTest {
     User user = new User();
     user.setRole_ID("Jonathan");
     session.setAttribute("User",user);
-    Integer Album_ID= 35;
+    Integer Album_ID= 1;
     request.setParameter("album",Album_ID.toString());
     request.setSession(session);
     servlet.doGet(request,response);

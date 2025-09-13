@@ -46,8 +46,13 @@ public class All_User extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
+    }
+    String _role_id = req.getParameter("role_id");
+    if (_role_id==null|| _role_id.isEmpty()){
+      _role_id = "";
     }
 
     session.setAttribute("currentPage",req.getRequestURL());
@@ -55,7 +60,7 @@ public class All_User extends HttpServlet {
 
     List<String> allRoles;
     try {
-      users =userDAO.getAllUser(20,0, null);
+      users =userDAO.getAllUser(20,0, _role_id);
       allRoles = userDAO.getDistinctRoleForDropdown();
     } catch (SQLException e) {
       throw new RuntimeException(e);
