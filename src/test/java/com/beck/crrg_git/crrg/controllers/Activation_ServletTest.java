@@ -1,5 +1,7 @@
 package com.beck.crrg_git.crrg.controllers;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 import com.beck.crrg_git.crrg.data_fakes.Album_DAO_Fake;
 import com.beck.crrg_git.crrg.data_fakes.Contributor_DAO_Fake;
@@ -9,6 +11,7 @@ import com.beck.crrg_git.crrg.models.Album_VM;
 import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -112,6 +115,9 @@ public class Activation_ServletTest {
     request.setParameter("mode","0");
     servlet.doPost(request,response);
     int status = (int) request.getAttribute("result");
+    String writer = response.getContentAsString();
+
+
     assertEquals(1,status);
   }
 

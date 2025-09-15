@@ -71,7 +71,7 @@ public class Activation_Servlet extends HttpServlet {
     } catch (Exception ex){
       results.put("dbStatus",ex.getMessage());
     }
-    int result = 0;
+    Integer result = 0;
     if (ObjectID>0&&(mode==0||mode==1)) {
       try {
         if (object.equals("picture")) {
@@ -90,7 +90,8 @@ public class Activation_Servlet extends HttpServlet {
 
 
     resp.setContentType("text/plain");
-    resp.getWriter().write(result);
+    resp.getWriter().write(result.toString());
+    resp.getWriter().flush();
   }
 }
 

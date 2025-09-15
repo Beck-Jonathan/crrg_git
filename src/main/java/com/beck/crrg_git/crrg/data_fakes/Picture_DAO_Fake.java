@@ -4,11 +4,15 @@ import com.beck.crrg_git.crrg.data.Picture_DAO;
 import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
 import com.beck.crrg_git.crrg.models.Picture;
 import com.beck.crrg_git.crrg.models.Picture_VM;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.core.DiskFileItem;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class Picture_DAO_Fake implements iPicture_DAO {
   private  List<Picture_VM> pictureVMs = new ArrayList<>();
@@ -38,7 +42,7 @@ public class Picture_DAO_Fake implements iPicture_DAO {
     Picture picture22 = new Picture(33, 50, 67, "auaVpMZd", "LkfnGbEn", false, false);
     Picture picture23 = new Picture(23, 50, 27, "TDjJCyWi", "pmPGZmBC", true, true);
     Picture picture24 = new Picture(23, 50, 51, "MwRsRsdC", "EJfKLXSq", false, false);
-    Picture picture25 = new Picture(35, 38, 57, "TTakXhyc", "GFYPjFuE", false, false);
+    Picture picture25 = new Picture(35, 50, 57, "TTakXhyc", "GFYPjFuE", false, false);
     Picture picture26 = new Picture(57, 66, 57, "mcUeoXWv", "YpTxtFQg", false, true);
     Picture picture27 = new Picture(13, 14, 57, "YmIcltfA", "jhcakEJG", false, true);
     Picture picture28 = new Picture(45, 49, 57, "gaculByB", "AljEbMfQ", true, false);
@@ -227,6 +231,9 @@ public class Picture_DAO_Fake implements iPicture_DAO {
 
   @Override
   public List<Picture> getActivePicturebyAlbum(Integer Album_ID) throws SQLException {
+   if(Album_ID<0){
+     throw new SQLException("Invalid Album ID");
+   }
     List<Picture> results = new ArrayList<>();
     for (Picture_VM picture : pictureVMs){
       if (picture.getAlbum_ID().equals(Album_ID)){
@@ -242,6 +249,34 @@ public class Picture_DAO_Fake implements iPicture_DAO {
     return pictureVMs.size();
   }
 
+  @Override
+  public Map<File, String> uploadToS3(List<File> files, String bucketName) throws Exception {
+    Map<File, String> uploadedFiles = new java.util.HashMap<>();
+    for (File file : files) {
+
+      // Simulate S3 URL: just create a dummy URL string
+      String fakeUrl = "https://fake-s3.amazonaws.com/" + bucketName + "/" + file.getName();
+      uploadedFiles.put(file, fakeUrl);
+    }
+    return uploadedFiles;
+  }
+
+  @Override
+  public List<File> saveUploadedFiles(HttpServletRequest req, String applicationPath, List<DiskFileItem> items, String UPLOAD_DIR) throws Exception {
+    List<File> fakeSavedFiles = new ArrayList<>();
+
+    for (DiskFileItem item : items) {
+      if (!item.isFormField() && item.getName() != null && !item.getName().isEmpty()) {
+        // Just simulate file creation with fake path, no actual IO
+        String fakeFilePath = applicationPath + File.separator + UPLOAD_DIR + File.separator + item.getName();
+        File fakeFile = new File(fakeFilePath);
+
+        fakeSavedFiles.add(fakeFile);
+      }
+    }
+
+    return fakeSavedFiles;
+  }
 
   public int undeletePicture(Integer Picture_ID) throws SQLException{
     int location =-1;
@@ -258,10 +293,11 @@ public class Picture_DAO_Fake implements iPicture_DAO {
     return 1;
   }
   private boolean duplicateKey(Picture _picture){
-    return _picture.getWeb_Address().equals("DUPLICATE");
+    return _picture.getDescription().toLowerCase().contains("duplicate");
   }
   private boolean exceptionKey(Picture _picture){
-    return _picture.getWeb_Address().equals("EXCEPTION");
+
+    return _picture.getDescription().toLowerCase().contains("exception");
   }
 
 }

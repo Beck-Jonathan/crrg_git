@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class site_management_servletTest {
   private static final String PAGE="WEB-INF/crrg/All_Picture.jsp";
-  All_Picture servlet;
+  site_management_servlet servlet;
   MockHttpServletRequest request;
   MockHttpServletResponse response;
   HttpSession session;
@@ -26,7 +26,7 @@ public class site_management_servletTest {
   @BeforeEach
   public void setup() throws ServletException{
 
-    servlet = new All_Picture();
+    servlet = new site_management_servlet();
     servlet.init();
     request =  new MockHttpServletRequest();
     response = new MockHttpServletResponse();

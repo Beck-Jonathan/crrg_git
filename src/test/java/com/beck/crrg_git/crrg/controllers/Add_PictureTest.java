@@ -1,6 +1,8 @@
 package com.beck.crrg_git.crrg.controllers;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import com.beck.crrg_git.crrg.data_fakes.Album_DAO_Fake;
@@ -168,47 +170,55 @@ public class Add_PictureTest {
   public void TestAddHasErrorsForEachFieldAndKeepsOnSamePage() throws ServletException, IOException{
     User user = new User();
     user.setRole_ID("Jonathan");
-    session.setAttribute("User",user);
-    request.setSession(session);
-    //request.setContentType("");
-    String resourceName = "";
-    String partName = "";
-    byte[] content = "testFile".getBytes();
-    byte[] content2 = "testFile2".getBytes();
-    MultipartFile file = new MockMultipartFile("content","a","application/zip",content);
-    MultipartFile file2 = new MockMultipartFile("content2","b","application/zip",content2);
-    request.addFile(file);
-    request.addFile(file2);
+    MockHttpSession session = new MockHttpSession();
+    session.setAttribute("User", user);
 
+    // Define boundary
+    String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
 
+    // Define form fields
+    Map<String, String> formFields = new HashMap<>();
+    formFields.put("variant", "php");
+    formFields.put("os", "mac");
+    formFields.put("version", "3.4");
+    formFields.put("inputpictureAlbum_ID", "-1");
+    formFields.put("inputpictureContributor_ID", "-1");
+    formFields.put("inputpictureWeb_Address", "x");
+    formFields.put("inputpicturedescription", "x");
+    //formFields.put("inputpictureis_Active", "");
+    //formFields.put("inputpictureis_Approved", "");
 
-    String boundary = "q1w2e3r4t5y6u7i8o9";
-    request.setContentType("multipart/form-data; boundary="+boundary);
-    request.setContent(createFileContent(content2,boundary,"application/zip","test.zip"));
-    request.addFile(file);
+    // Define file fields
+    Map<String, byte[]> fileFields = new LinkedHashMap<>();
+    fileFields.put("content", "testFile".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content2", "testFile2".getBytes(StandardCharsets.UTF_8));
+
+    // Build multipart content
+    byte[] multipartContent = buildMultipartContent(boundary, formFields, fileFields);
+
+    // Setup request
+    //MockHttpServletRequest request = new MockHttpServletRequest();
     request.setMethod("POST");
-    request.setParameter("variant", "php");
-    request.setParameter("os", "mac");
-    request.setParameter("version", "3.4");
-    MockHttpServletResponse response = new MockHttpServletResponse();
+    request.setContentType("multipart/form-data; boundary=" + boundary);
+    request.setContent(multipartContent);
+    request.setSession(session);
+
+    // Setup response
+    //MockHttpServletResponse response = new MockHttpServletResponse();
+
+    // Call servlet
     servlet.doPost(request, response);
-
     //request.
-
-
    // servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
     String Album_IDError = results.get("pictureAlbum_IDerror");
     String Contributor_IDError = results.get("pictureContributor_IDerror");
-    String Web_AddressError = results.get("pictureWeb_Addresserror");
-    String DescriptionError = results.get("pictureDescriptionerror");
+    String DescriptionError = results.get("picturedescriptionerror");
     assertNotEquals("",Album_IDError);
     assertNotNull(Album_IDError);
     assertNotEquals("",Contributor_IDError);
     assertNotNull(Contributor_IDError);
-    assertNotEquals("",Web_AddressError);
-    assertNotNull(Web_AddressError);
     assertNotEquals("",DescriptionError);
     assertNotNull(DescriptionError);
     assertEquals(200,responseStatus);
@@ -219,24 +229,55 @@ public class Add_PictureTest {
    */
   @Test
   public void TestAddCanAddWithNoErrorsAndRedirects() throws ServletException, IOException{
+    // Setup session with valid user
     User user = new User();
     user.setRole_ID("Jonathan");
-    session.setAttribute("User",user);
+    MockHttpSession session = new MockHttpSession();
+    session.setAttribute("User", user);
+
+    // Define boundary
+    String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+
+    // Define form fields
+    Map<String, String> formFields = new HashMap<>();
+    formFields.put("variant", "php");
+    formFields.put("os", "mac");
+    formFields.put("version", "3.4");
+    formFields.put("inputpictureAlbum_ID", "406");
+    formFields.put("inputpictureContributor_ID", "406");
+    formFields.put("inputpictureWeb_Address", "TestValue");
+    formFields.put("inputpicturedescription", "TestValue");
+    formFields.put("inputpictureis_Active", "true");
+    formFields.put("inputpictureis_Approved", "true");
+
+    // Define file fields
+    Map<String, byte[]> fileFields = new LinkedHashMap<>();
+    fileFields.put("content", "testFile".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content2", "testFile2".getBytes(StandardCharsets.UTF_8));
+
+    // Build multipart content
+    byte[] multipartContent = buildMultipartContent(boundary, formFields, fileFields);
+
+    // Setup request
+    //MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setMethod("POST");
+    request.setContentType("multipart/form-data; boundary=" + boundary);
+    request.setContent(multipartContent);
     request.setSession(session);
-    request.setParameter("inputpictureAlbum_ID","406");
-    request.setParameter("inputpictureContributor_ID","406");
-    request.setParameter("inputpictureWeb_Address","TestValue");
-    request.setParameter("inputpictureDescription","TestValue");
-    request.setParameter("inputpictureIs_Active","true");
-    request.setParameter("inputpictureis_Approved","true");
-    servlet.doPost(request,response);
-    int responseStatus = response.getStatus();
+
+    // Setup response
+    //MockHttpServletResponse response = new MockHttpServletResponse();
+
+    // Call servlet
+    servlet.doPost(request, response);
+
+    // Validate
+    int status = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Picture_Added = results.get("dbStatus");
-    assertEquals(302,responseStatus);
-    assertNotNull(Picture_Added);
-    assertEquals("Picture Added",Picture_Added);
-    assertNotEquals("",Picture_Added);
+
+    assertEquals(302, status);
+    assertNotNull(results);
+    assertEquals("2 Pictures Added. 0 Pictures Not Added.", results.get("dbStatus"));
   }
 
   /**
@@ -246,26 +287,59 @@ public class Add_PictureTest {
   public void testExceptionKeyThrowsException() throws ServletException, IOException{
     User user = new User();
     user.setRole_ID("Jonathan");
-    session.setAttribute("User",user);
+    MockHttpSession session = new MockHttpSession();
+    session.setAttribute("User", user);
+
+    // Define boundary
+    String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+
+    // Define form fields
+    Map<String, String> formFields = new HashMap<>();
+    formFields.put("variant", "php");
+    formFields.put("os", "mac");
+    formFields.put("version", "3.4");
+    formFields.put("inputpictureAlbum_ID", "1");
+    formFields.put("inputpictureContributor_ID", "1");
+    formFields.put("inputpictureWeb_Address", "www.EXCEPTION.com");
+    formFields.put("inputpicturedescription", "EXCEPTION");
+    formFields.put("inputpictureis_Active", "true");
+    formFields.put("inputpictureis_Approved", "true");
+
+    // Define file fields
+    Map<String, byte[]> fileFields = new LinkedHashMap<>();
+    fileFields.put("content", "testFile".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content2", "testFile2".getBytes(StandardCharsets.UTF_8));
+
+    // Build multipart content
+    byte[] multipartContent = buildMultipartContent(boundary, formFields, fileFields);
+
+    // Setup request
+    //MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setMethod("POST");
+    request.setContentType("multipart/form-data; boundary=" + boundary);
+    request.setContent(multipartContent);
     request.setSession(session);
-    request.setParameter("inputpictureAlbum_ID","406");
-    request.setParameter("inputpictureContributor_ID","406");
-    request.setParameter("inputpictureWeb_Address","EXCEPTION");
-    request.setParameter("inputpictureDescription","EXCEPTION");
-    request.setParameter("inputpictureIs_Active","true");
-    request.setParameter("inputpictureis_Approved","true");
-    servlet.doPost(request,response);
+
+    // Setup response
+    //MockHttpServletResponse response = new MockHttpServletResponse();
+
+    // Call servlet
+    servlet.doPost(request, response);
+    //request.
+    // servlet.doPost(request,response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
-    String Picture_Added = results.get("dbStatus");
     String dbError = results.get("dbError");
+
+    String Picture_Added = results.get("dbStatus");
     assertEquals(200,responseStatus);
     assertNotNull(Picture_Added);
-    assertEquals("Picture Not Added",Picture_Added);
     assertNotEquals("",Picture_Added);
+    assertEquals("0 Pictures Added. 2 Pictures Not Added.",Picture_Added);
     assertNotNull(dbError);
     assertNotEquals("",dbError);
     assertEquals("Database Error",dbError);
+
   }
 
   /**
@@ -275,22 +349,54 @@ public class Add_PictureTest {
   public void testDuplicateKeyReturnsZero() throws ServletException, IOException{
     User user = new User();
     user.setRole_ID("Jonathan");
-    session.setAttribute("User",user);
+    MockHttpSession session = new MockHttpSession();
+    session.setAttribute("User", user);
+
+    // Define boundary
+    String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+
+    // Define form fields
+    Map<String, String> formFields = new HashMap<>();
+    formFields.put("variant", "php");
+    formFields.put("os", "mac");
+    formFields.put("version", "3.4");
+    formFields.put("inputpictureAlbum_ID", "1");
+    formFields.put("inputpictureContributor_ID", "1");
+    formFields.put("inputpictureWeb_Address", "www.DUPLICATE.com");
+    formFields.put("inputpicturedescription", "DUPLICATE");
+    formFields.put("inputpictureis_Active", "true");
+    formFields.put("inputpictureis_Approved", "true");
+
+    // Define file fields
+    Map<String, byte[]> fileFields = new LinkedHashMap<>();
+    fileFields.put("content", "testFile".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content2", "testFile2".getBytes(StandardCharsets.UTF_8));
+
+    // Build multipart content
+    byte[] multipartContent = buildMultipartContent(boundary, formFields, fileFields);
+
+    // Setup request
+    //MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setMethod("POST");
+    request.setContentType("multipart/form-data; boundary=" + boundary);
+    request.setContent(multipartContent);
     request.setSession(session);
-    request.setParameter("inputpictureAlbum_ID","406");
-    request.setParameter("inputpictureContributor_ID","406");
-    request.setParameter("inputpictureWeb_Address","DUPLICATE");
-    request.setParameter("inputpictureDescription","DUPLICATE");
-    request.setParameter("inputpictureIs_Active","true");
-    request.setParameter("inputpictureis_Approved","true");
-    servlet.doPost(request,response);
+
+    // Setup response
+    //MockHttpServletResponse response = new MockHttpServletResponse();
+
+    // Call servlet
+    servlet.doPost(request, response);
     int responseStatus = response.getStatus();
     Map<String, String> results = (Map<String, String>) request.getAttribute("results");
     String Picture_Added = results.get("dbStatus");
+    String dbError = results.get("dbError");
     assertEquals(200,responseStatus);
     assertNotNull(Picture_Added);
-    assertEquals("Picture Not Added",Picture_Added);
+    assertEquals("0 Pictures Added. 2 Pictures Not Added.",Picture_Added);
     assertNotEquals("",Picture_Added);
+    assertNull(dbError);
+
   }
 
   /**
@@ -301,6 +407,117 @@ public class Add_PictureTest {
     servlet = null;
     servlet = new Add_Picture();
     servlet.init();
+  }
+  private byte[] buildMultipartContent(
+      String boundary,
+      Map<String, String> fields,
+      Map<String, byte[]> files
+  ) throws IOException {
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    String lineSeparator = "\r\n";
+    String boundaryPrefix = "--" + boundary;
+
+    // Form fields
+    for (Map.Entry<String, String> field : fields.entrySet()) {
+      out.write((boundaryPrefix + lineSeparator).getBytes());
+      out.write(("Content-Disposition: form-data; name=\"" + field.getKey() + "\"" + lineSeparator).getBytes());
+      out.write(("Content-Type: text/plain; charset=UTF-8" + lineSeparator).getBytes());
+      out.write((lineSeparator).getBytes());
+      out.write((field.getValue() + lineSeparator).getBytes());
+    }
+
+    // File fields
+    for (Map.Entry<String, byte[]> file : files.entrySet()) {
+      out.write((boundaryPrefix + lineSeparator).getBytes());
+      out.write(("Content-Disposition: form-data; name=\"" + file.getKey() + "\"; filename=\"" + file.getKey() + ".zip\"" + lineSeparator).getBytes());
+      out.write(("Content-Type: application/zip" + lineSeparator).getBytes());
+      out.write((lineSeparator).getBytes());
+      out.write(file.getValue());
+      out.write(lineSeparator.getBytes());
+    }
+
+    // Closing boundary
+    out.write((boundaryPrefix + "--" + lineSeparator).getBytes());
+
+    return out.toByteArray();
+  }
+
+  @Test
+  public void testFalseOverRideCanTrigger() throws IOException, ServletException {
+
+    // Setup session with valid user
+    User user = new User();
+    user.setRole_ID("Jonathan");
+    MockHttpSession session = new MockHttpSession();
+    session.setAttribute("User", user);
+
+    // Define boundary
+    String boundary = "----WebKitFormBoundary7MA4YWxkTrZu0gW";
+
+    // Define form fields
+    Map<String, String> formFields = new HashMap<>();
+    formFields.put("variant", "php");
+    formFields.put("os", "mac");
+    formFields.put("version", "3.4");
+    formFields.put("inputpictureAlbum_ID", "406");
+    formFields.put("inputpictureContributor_ID", "406");
+    formFields.put("inputpictureWeb_Address", "TestValue");
+    formFields.put("inputpicturedescription", "TestValue");
+    formFields.put("inputpictureis_Active", "x");
+    formFields.put("inputpictureis_Approved", "x");
+
+    // Define file fields
+    Map<String, byte[]> fileFields = new LinkedHashMap<>();
+    fileFields.put("content1", "testFile1".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content2", "testFile2".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content3", "testFile3".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content4", "testFile4".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content5", "testFile5".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content6", "testFile6".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content7", "testFile7".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content8", "testFile8".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content9", "testFile9".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content10", "testFile10".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content11", "testFile11".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content12", "testFile12".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content13", "testFile13".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content14", "testFile14".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content15", "testFile15".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content16", "testFile16".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content17", "testFile17".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content18", "testFile18".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content19", "testFile19".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content20", "testFile20".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content21", "testFile21".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content22", "testFile22".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content23", "testFile23".getBytes(StandardCharsets.UTF_8));
+    fileFields.put("content24", "testFile24".getBytes(StandardCharsets.UTF_8));
+
+    // Build multipart content
+    byte[] multipartContent = buildMultipartContent(boundary, formFields, fileFields);
+
+    // Setup request
+    //MockHttpServletRequest request = new MockHttpServletRequest();
+    request.setMethod("POST");
+    request.setContentType("multipart/form-data; boundary=" + boundary);
+    request.setContent(multipartContent);
+    request.setSession(session);
+
+    // Setup response
+    //MockHttpServletResponse response = new MockHttpServletResponse();
+
+    // Call servlet
+    servlet.doPost(request, response);
+
+    // Validate
+    int status = response.getStatus();
+    Map<String, String> results = (Map<String, String>) request.getAttribute("results");
+
+    assertEquals(302, status);
+    assertNotNull(results);
+    assertEquals("False Override activated.",results.get("falseOverride"));
+    assertEquals("24 Pictures Added. 0 Pictures Not Added.", results.get("dbStatus"));
   }
 
 }

@@ -20,6 +20,7 @@ public class site_management_servlet extends HttpServlet {
     User user =(User) session.getAttribute("User");
 
     if (user==null){
+      session.invalidate();
       resp.sendRedirect("crrgLogin");
       return;
     }

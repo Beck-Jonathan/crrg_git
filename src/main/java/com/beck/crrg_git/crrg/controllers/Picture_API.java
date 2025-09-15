@@ -28,17 +28,19 @@ public class Picture_API extends HttpServlet {
     pictureDAO = new Picture_DAO();
   }
 
+  public void init (iPicture_DAO pictureDAO) {
+    this.pictureDAO = pictureDAO;
+  }
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-
     String album = req.getParameter("album");
     String contributor = req.getParameter("contributor");
     Integer contributorID = 0;
     if (contributor != null) {
       contributorID = Integer.valueOf(contributor);
     }
-    Integer AlbumID = 0;
+    Integer AlbumID = 1;
     if (album != null) {
       AlbumID = Integer.valueOf(album);
     }
@@ -47,12 +49,15 @@ public class Picture_API extends HttpServlet {
     try {
       pictures = pictureDAO.getActivePicturebyAlbum( AlbumID);
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      PrintWriter out = resp.getWriter();
+      out.println(e.getMessage());
+      out.flush();
+      return;
     }
     ObjectMapper objectMapper = new ObjectMapper();
     try {
       jsonArray  = objectMapper.writeValueAsString(pictures);
-      System.out.println(jsonArray);
+      //System.out.println(jsonArray);
     }
     catch (Exception e) {
     }

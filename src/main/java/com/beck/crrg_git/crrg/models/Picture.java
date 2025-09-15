@@ -79,7 +79,7 @@ public class Picture implements Comparable<Picture>{
   }
   public void setDescription(String description) {
     description = description.replaceAll("[^.\"'A-Za-z0-9 - ]","");
-    if(description.length()<4&&!description.isEmpty()){
+    if(description.length()<4){
       throw new IllegalArgumentException("description is too short.");
     }
     if(description.length()>100){

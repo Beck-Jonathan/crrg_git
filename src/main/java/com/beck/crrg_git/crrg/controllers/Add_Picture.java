@@ -43,7 +43,7 @@ import java.util.*;
     maxFileSize = 1024 * 1024 * 10,      // 10 MB
     maxRequestSize = 1024 * 1024 * 100   // 100 MB
 )
-public class Add_Picture extends HttpServlet{
+public class Add_Picture extends HttpServlet {
   private static final String UPLOAD_DIR = "images\\crrg\\";
   private static final String bucketName = "derbypictures";
 
@@ -52,21 +52,20 @@ public class Add_Picture extends HttpServlet{
   private iAlbum_DAO albumDAO;
 
   @Override
-  public void init() throws ServletException{
+  public void init() throws ServletException {
     pictureDAO = new Picture_DAO();
     contributorDAO = new Contributor_DAO();
     albumDAO = new Album_DAO();
   }
-  public void init(iPicture_DAO pictureDAO,iAlbum_DAO albumDAO,iContributor_DAO contributorDAO){
+
+  public void init(iPicture_DAO pictureDAO, iAlbum_DAO albumDAO, iContributor_DAO contributorDAO) {
     this.pictureDAO = pictureDAO;
     this.albumDAO = albumDAO;
     this.contributorDAO = contributorDAO;
   }
 
-
-
   @Override
-  public  void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+  public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
 //To restrict this page based on privilege level
     int PRIVILEGE_NEEDED = 0;
@@ -74,20 +73,20 @@ public class Add_Picture extends HttpServlet{
     ROLES_NEEDED.add("Jonathan");
 //add roles here
     HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User");
-    if (user==null||!user.isInRole(ROLES_NEEDED)){
+    User user = (User) session.getAttribute("User");
+    if (user == null || !user.isInRole(ROLES_NEEDED)) {
       session.invalidate();
       resp.sendRedirect("crrgLogin");
       return;
     }
-     List<Album_VM> allAlbums ;
-     List<Contributor_VM> allContributors ;
-    session.setAttribute("currentPage",req.getRequestURL());
+    List<Album_VM> allAlbums;
+    List<Contributor_VM> allContributors;
+    session.setAttribute("currentPage", req.getRequestURL());
     req.setAttribute("pageTitle", "Add Picture");
 
     try {
-      allAlbums = albumDAO.getAllAlbum(20,0,"");
-      allContributors = contributorDAO.getAllContributor(20,0);
+      allAlbums = albumDAO.getAllAlbum(20, 0, "");
+      allContributors = contributorDAO.getAllContributor(20, 0);
     } catch (SQLException e) {
       allAlbums = new ArrayList<>();
       allContributors = new ArrayList<>();
@@ -99,25 +98,23 @@ public class Add_Picture extends HttpServlet{
 
   @Override
   public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    //To restrict this page based on privilege level
-
     List<String> ROLES_NEEDED = new ArrayList<>();
     ROLES_NEEDED.add("Jonathan");
-//add roles here
+    //add roles here
     HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User");
+    User user = (User) session.getAttribute("User");
     Map<String, String> results = new HashMap<>();
-    if (user==null||!user.isInRole(ROLES_NEEDED)){
+    if (user == null || !user.isInRole(ROLES_NEEDED)) {
       session.invalidate();
       resp.sendRedirect("crrgLogin");
       return;
     }
-    int errors=0;
-     List<Album_VM> allAlbums ;
-     List<Contributor_VM> allContributors ;
+    int errorsCount =0;
+    List<Album_VM> allAlbums;
+    List<Contributor_VM> allContributors;
     try {
-      allAlbums = albumDAO.getAllAlbum(20,0,"");
-      allContributors = contributorDAO.getAllContributor(20,0);
+      allAlbums = albumDAO.getAllAlbum(20, 0, "");
+      allContributors = contributorDAO.getAllContributor(20, 0);
     } catch (SQLException e) {
       allAlbums = new ArrayList<>();
       allContributors = new ArrayList<>();
@@ -127,79 +124,60 @@ public class Add_Picture extends HttpServlet{
 
     List<File> files = new ArrayList<>();
     JakartaServletDiskFileUpload upload = new JakartaServletDiskFileUpload();
-    //ServletContext servletContext = this.getServletConfig().getServletContext();
-    List<DiskFileItem> items ;
+    List<DiskFileItem> items;
     try {
-
       items = upload.parseRequest(req);
-    }catch (Exception e){
-      errors++;
-      results.put("picutreUploadError",e.getMessage());
-
-      items=new ArrayList<>();
+    } catch (Exception e) {
+      errorsCount++;
+      results.put("pictureUploadError", e.getMessage());
+      items = new ArrayList<>();
     }
-
     String applicationPath = req.getServletContext().getRealPath("");
     String albumID = "";
-    String description ="";
+    String description = "";
     String contributorID = "";
     String isApproved = "";
     String isActive = "";
-    if (errors>0) {
+    if ( errorsCount > 0) {
       req.setAttribute("results", results);
       req.setAttribute("Albums", allAlbums);
       req.setAttribute("Contributors", allContributors);
       req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
       return;
     }
-      try {
-        for (DiskFileItem x : items) {
-          //System.out.println(x.getName());
-          if (x.getName() != null) {
-            InputStream y = x.getInputStream();
-            File z = new File(applicationPath + File.separator + UPLOAD_DIR + x.getName());
-            boolean result = z.createNewFile();
-            if (!result) {
-              z.delete();
-              z.createNewFile();
-            }
-            FileOutputStream outstream = new FileOutputStream(z);
-            IOUtils.copy(y, outstream);
-            files.add(z);
-          } else {
-            String variable = x.getFieldName();
-            String value = x.getString();
-            switch (variable) {
-              case "inputpictureAlbum_ID":
-                albumID = value;
-                break;
-              case "inputpictureContributor_ID":
-                contributorID = value;
-                break;
-              case "inputpicturedescription":
-                description = value;
-                break;
-              case "inputpictureis_Approved":
-                isApproved = value;
-                break;
-              case "inputpictureis_Active":
-                isActive = value;
-                break;
-            }
-          }
-        }
-      } catch (Exception e) {
-        System.out.println(e.getMessage());
+
+    try {
+      files = pictureDAO.saveUploadedFiles(req, applicationPath, items,UPLOAD_DIR);
+    } catch (Exception e) {
+      results.put("fileSaveError", e.getMessage());
+    }
+    for (DiskFileItem x : items) {
+
+      String variable = x.getFieldName();
+      String value = x.getString();
+      switch (variable) {
+        case "inputpictureAlbum_ID":
+          albumID = value;
+          break;
+        case "inputpictureContributor_ID":
+          contributorID = value;
+          break;
+        case "inputpicturedescription":
+          description = value;
+          break;
+        case "inputpictureis_Approved":
+          isApproved = value;
+          break;
+        case "inputpictureis_Active":
+          isActive = value;
+          break;
       }
+    }
+
       boolean is_active = false;
       boolean is_approved = false;
-      try {
-        is_active = Boolean.parseBoolean(isActive);
-        is_approved = Boolean.parseBoolean(isApproved);
-      } catch (Exception e) {
-
-      }
-
+      is_active = Boolean.parseBoolean(isActive);
+      is_approved = Boolean.parseBoolean(isApproved);
 
       results.put("Album_ID", albumID);
       results.put("Contributor_ID", contributorID);
@@ -207,111 +185,96 @@ public class Add_Picture extends HttpServlet{
       results.put("Is_Active", isActive);
       results.put("is_Approved", isApproved);
 
-      String url = "";
-
-      String uploadFilePath = applicationPath + File.separator + UPLOAD_DIR + albumID;
-      File fileSaveDir = new File(uploadFilePath);
-      if (!fileSaveDir.exists()) {
-        fileSaveDir.mkdirs();
-      }
-
       List<Picture> pictures = new ArrayList<>();
       boolean falseOverride = false;
       if (files.size() > 20) {
         falseOverride = true;
+        results.put("falseOverride","False Override activated.");
       }
-      try (S3Client client = S3Client.builder().build()) {
-        for (int i = 0; i < files.size(); i++) {
-          String filename = files.get(i).getName();
-          System.out.println(filename);
-          File file = files.get(i);
+
+      if (errorsCount==0) {
+        Map<File, String> uploadedUrls;
+        try {
+          uploadedUrls = pictureDAO.uploadToS3(files, bucketName);
+        } catch (Exception ex) {
+          results.put("dbError", ex.getMessage());
+          req.setAttribute("results", results);
+          req.setAttribute("pageTitle", "Add Picture");
+          req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
+          return;
+        }
+        int result = 0;
+        int added = 0;
+        int notadded = 0;
+
+        errorsCount = 0;
+        for (File file : files) {
           Picture picture = new Picture();
           try {
             picture.setAlbum_ID(Integer.valueOf(albumID));
           } catch (IllegalArgumentException e) {
             results.put("pictureAlbum_IDerror", e.getMessage());
-            errors++;
+            errorsCount++;
           }
           try {
             picture.setContributor_ID(Integer.valueOf(contributorID));
           } catch (IllegalArgumentException e) {
             results.put("pictureContributor_IDerror", e.getMessage());
-            errors++;
+            errorsCount++;
           }
-
           try {
             picture.setDescription(description);
           } catch (IllegalArgumentException e) {
             results.put("picturedescriptionerror", e.getMessage());
-            errors++;
+            errorsCount++;
           }
+
+            picture.setIs_Active(is_active);
+
+          picture.setis_Approved(is_approved);
           if (falseOverride) {
             picture.setIs_Active(false);
-          } else {
-            picture.setIs_Active(is_active);
+            picture.setis_Approved(false);
           }
-          picture.setis_Approved(is_approved);
-          pictures.add(picture);
-
-          // File file = new File(uploadFilePath + File.separator + fileName);
-
-          // for (Part part : req.getParts()) {
-          // part.write(uploadFilePath + File.separator + fileName);
-
-          PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(filename).build();
-          PutObjectResponse result = client.putObject(request, RequestBody.fromFile(file));
-
-          GetUrlRequest req2 = GetUrlRequest.builder().bucket(bucketName).key(filename).build();
-          url = client.utilities().getUrl(req2).toExternalForm();
           try {
-            picture.setWeb_Address(url);
+            picture.setWeb_Address(uploadedUrls.get(file));
           } catch (IllegalArgumentException e) {
             results.put("pictureWeb_Addresserror", e.getMessage());
-            errors++;
+            errorsCount++;
           }
+          pictures.add(picture);
           file.delete();
         }
-      } catch (Exception ex) {
-        results.put("dbError", ex.getMessage());
-        req.setAttribute("results", results);
-        req.setAttribute("pageTitle", "Add Picture");
-        req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
-        return;
-      }
 
-      int result = 0;
-      int added = 0;
-      int notadded = 0;
-      if (errors == 0) {
-        for (Picture picture : pictures) {
-          try {
-            result = pictureDAO.add(picture);
-          } catch (Exception ex) {
-            results.put("dbError", "Database Error");
-          }
-          if (result > 0) {
-
-            added++;
-
-          } else {
-            notadded++;
-
-          }
-          if (added == pictures.size()) {
-            resp.sendRedirect("all-Pictures");
-            return;
-
+        if (errorsCount == 0) {
+          for (Picture picture : pictures) {
+            try {
+              result = pictureDAO.add(picture);
+            } catch (Exception ex) {
+              results.put("dbError", "Database Error");
+            }
+            if (result > 0) {
+              added++;
+            } else {
+              notadded++;
+            }
+            if (added == pictures.size()) {
+              results.put("dbStatus", added + " Pictures Added. " + notadded + " Pictures Not Added.");
+              req.setAttribute("results", results);
+              resp.sendRedirect("all-Pictures");
+              return;
+            }
           }
         }
+
+        results.put("dbStatus", added + " Pictures Added. " + notadded + " Pictures Not Added.");
       }
+        req.setAttribute("results", results);
 
-      results.put("dbStatus", added + " Pictures Added. " + notadded + " Pictures Not Added.");
-      //}
-      req.setAttribute("results", results);
-
-    req.setAttribute("pageTitle", "Add Picture");
-    req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
+      req.setAttribute("pageTitle", "Add Picture");
+      req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
 
   }
-}
 
+
+}

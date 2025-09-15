@@ -71,7 +71,7 @@ public class Approval_Servlet extends HttpServlet {
 
 
 
-    int result = 0;
+    Integer result = 0;
     if (ObjectID>0&&mode>=0) {
       try {
         if (object.equals("picture")) {
@@ -87,7 +87,7 @@ public class Approval_Servlet extends HttpServlet {
     req.setAttribute("result",result);
 
     resp.setContentType("text/plain");
-    resp.getWriter().write(result);
+    resp.getWriter().write(result.toString());
   }
 }
 

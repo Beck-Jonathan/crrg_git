@@ -2,9 +2,13 @@ package com.beck.crrg_git.crrg.data_interfaces;
 
 import com.beck.crrg_git.crrg.models.Picture;
 import com.beck.crrg_git.crrg.models.Picture_VM;
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.fileupload2.core.DiskFileItem;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public interface iPicture_DAO {
   /**
@@ -51,4 +55,8 @@ public interface iPicture_DAO {
   public List<Picture> getActivePicturebyAlbum(Integer Album_ID) throws SQLException;
 
 public int getPictureCount() throws SQLException;
-}
+
+  Map<File, String> uploadToS3(List<File> files, String bucketName) throws Exception;
+  List<File> saveUploadedFiles(HttpServletRequest req, String applicationPath, List<DiskFileItem> items, String UPLOAD_DIR) throws Exception;
+
+  }
