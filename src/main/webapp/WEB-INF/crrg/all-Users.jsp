@@ -36,6 +36,7 @@ Create the JSP  For Viewing All of The  User table
                         <th scope="col">Last_Logged_In</th>
 
                         <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
 
                     </tr>
                     </thead>
@@ -62,6 +63,13 @@ Create the JSP  For Viewing All of The  User table
                             <td> <fmt:formatDate type="both" value="${user.last_Logged_In.toDate()}" /> </td>
 
                             <td><a href = "editCrrgUser?userid=${user.user_ID}&mode=edit" > Edit </a></td>
+                            <td>
+                                <c:if test="${user.role_ID ne 'Jonathan'}">
+                                <div>
+                                    <button class="delButton" href="${user.user_ID}" >Delete</button> </div>
+                                <div style="display: none;" id="user.user_IDStatus"></div>
+                                </c:if>
+                            </td>
 
                         </tr>
                     </c:forEach>
@@ -71,6 +79,9 @@ Create the JSP  For Viewing All of The  User table
             </c:if>
         </div>
     </div>
+</div>
+<div id="dialog" title="Confirmation Required">
+    Are you sure about this?
 </div>
 </main>
 <%@include file="/WEB-INF/crrg/foot.jsp"%>

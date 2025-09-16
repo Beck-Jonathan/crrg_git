@@ -152,7 +152,7 @@ public class Add_User extends HttpServlet{
         results.put("dbStatus","User Added");
         results.put("Password",_Password);
         session.setAttribute("results", results);
-        resp.sendRedirect("allCrrgUser");
+        resp.sendRedirect("all-Users");
         return;
       } else {
         results.put("dbStatus","User Not Added");

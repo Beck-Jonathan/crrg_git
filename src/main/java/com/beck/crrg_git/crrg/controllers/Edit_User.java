@@ -26,12 +26,17 @@ import java.util.Map;
 public class Edit_User extends HttpServlet{
 
   private iUser_DAO userDAO;
-  private List<String> allRoles;
+
 
   @Override
   public void init() throws ServletException{
     userDAO = new User_DAO();
-    allRoles = userDAO.getDistinctRoleForDropdown();
+
+  }
+
+  public void init(iUser_DAO _userDAO) throws ServletException{
+    this.userDAO = _userDAO;
+
   }
 
   @Override
@@ -43,27 +48,39 @@ public class Edit_User extends HttpServlet{
     ROLES_NEEDED.add("Jonathan");
 //add roles here
     HttpSession session = req.getSession();
-    User _user = (User)session.getAttribute("User");
-    if (_user==null||!_user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+    User user = (User)session.getAttribute("User");
+    if (user==null||!user.isInRole(ROLES_NEEDED)){
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
+      return;
+    }
+    List<String> allRoles = new ArrayList<>();
+    String mode = req.getParameter("mode");
+    String primaryKey = req.getParameter("userid");
+    User _user= new User();
+    try {
+      _user.setUser_ID(primaryKey);
+    }catch (Exception e){
+
+      resp.sendRedirect("all-Users");
       return;
     }
 
-    String mode = req.getParameter("mode");
-    String primaryKey = req.getParameter("userid");
-    User user= new User();
-    user.setUser_ID(primaryKey);
     try{
-      user=userDAO.getUserByUserID(user);
+
+      _user=userDAO.getUserByUserID(_user);
+      allRoles = userDAO.getDistinctRoleForDropdown();
     } catch (SQLException e) {
       req.setAttribute("dbStatus",e.getMessage());
+      resp.sendRedirect("all-Users");
+      return;
     }
 
-    session.setAttribute("_user",user);
+    session.setAttribute("_user",_user);
     req.setAttribute("mode",mode);
     session.setAttribute("currentPage",req.getRequestURL());
     req.setAttribute("pageTitle", "View User");
-    allRoles = userDAO.getDistinctRoleForDropdown();
+
     req.setAttribute("Roles", allRoles);
     req.getRequestDispatcher("WEB-INF/crrg/EditUser.jsp").forward(req, resp);
   }
@@ -76,9 +93,10 @@ public class Edit_User extends HttpServlet{
     ROLES_NEEDED.add("Jonathan");
 //add roles here
     HttpSession session = req.getSession();
-    User _user = (User)session.getAttribute("User");
-    if (_user==null||!_user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+    User user = (User)session.getAttribute("User");
+    if (user==null||!user.isInRole(ROLES_NEEDED)){
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
     }
 
@@ -86,22 +104,40 @@ public class Edit_User extends HttpServlet{
     String mode = req.getParameter("mode");
     req.setAttribute("mode",mode);
 //to set the drop downs
-    allRoles = userDAO.getDistinctRoleForDropdown();
+    List<String> allRoles = new ArrayList<>();
+    try  {
+      allRoles = userDAO.getDistinctRoleForDropdown();
+    }catch (Exception e) {
+
+    }
+
     req.setAttribute("Roles", allRoles);
 //to get the old User
 
     User _oldUser= (User)session.getAttribute("_user");
+    if (_oldUser==null){
+      resp.sendRedirect("all-Users");
+      return;
+    }
 //to get the new event's info
     //String _User_ID = req.getParameter("inputuserUser_ID");
     String _User_ID=_oldUser.getUser_ID();
     String _Role_ID = req.getParameter("inputuserRole_ID");
-    _Role_ID=_Role_ID.trim();
+    if (_Role_ID!=null){
+      _Role_ID=_Role_ID.trim();
+    }
     String _First_Name = req.getParameter("inputuserFirst_Name");
-    _First_Name=_First_Name.trim();
+    if (_First_Name!=null){
+      _First_Name=_First_Name.trim();
+    }
     String _Last_Name = req.getParameter("inputuserLast_Name");
-    _Last_Name=_Last_Name.trim();
+    if (_Last_Name!=null){
+      _Last_Name=_Last_Name.trim();
+    }
     String _Email = req.getParameter("inputuserEmail");
-    _Email=_Email.trim();
+    if (_Email!=null){
+      _Email=_Email.trim();
+    }
 
     results.put("User_ID",_User_ID);
     results.put("Role_ID",_Role_ID);
@@ -113,27 +149,27 @@ public class Edit_User extends HttpServlet{
     int errors =0;
     try {
       _newUser.setUser_ID(_User_ID);
-    } catch(IllegalArgumentException e) {results.put("userUser_IDerror", e.getMessage());
+    } catch(Exception e) {results.put("userUser_IDerror", e.getMessage());
       errors++;
     }
     try {
       _newUser.setRole_ID(_Role_ID);
-    } catch(IllegalArgumentException e) {results.put("userRole_IDerror", e.getMessage());
+    } catch(Exception e) {results.put("userRole_IDerror", e.getMessage());
       errors++;
     }
     try {
       _newUser.setFirst_Name(_First_Name);
-    } catch(IllegalArgumentException e) {results.put("userFirst_Nameerror", e.getMessage());
+    } catch(Exception e) {results.put("userFirst_Nameerror", e.getMessage());
       errors++;
     }
     try {
       _newUser.setLast_Name(_Last_Name);
-    } catch(IllegalArgumentException e) {results.put("userLast_Nameerror", e.getMessage());
+    } catch(Exception e) {results.put("userLast_Nameerror", e.getMessage());
       errors++;
     }
     try {
       _newUser.setEmail(_Email);
-    } catch(IllegalArgumentException e) {results.put("userEmailerror", e.getMessage());
+    } catch(Exception e) {results.put("userEmailerror", e.getMessage());
       errors++;
     }
 
@@ -143,9 +179,10 @@ public class Edit_User extends HttpServlet{
       try{
         result=userDAO.update(_oldUser,_newUser);
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
+        req.setAttribute("results", results);
         results.put("dbStatus","User updated");
         resp.sendRedirect("allCrrgUser");
         return;

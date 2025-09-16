@@ -54,16 +54,7 @@ Create the JSP For Viuw/Edit from the User table
                 </c:if>
             </div>
         </div>
-        <!-- Last_Logged_In -->
-        <div class ="row" id = "row5">
-            <label for="inputuserLast_Logged_In" class="form-label">Last_Logged_In</label>
-            <div class="input-group input-group-lg">
-                <input type="date" class="<c:if test="${not empty results.userLast_Logged_Inerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1" placeholder="Last_Logged_In" disabled id="inputuserLast_Logged_In" name="inputuserLast_Logged_In" value="${fn:escapeXml(_user.last_Logged_In)}">
-                <c:if test="${not empty results.userLast_Logged_Inerror}">
-                    <div class="invalid-feedback">${results.userLast_Logged_Inerror}</div>
-                </c:if>
-            </div>
-        </div>
+
 
         <div class="align-items-center mt-0">
             <div class="d-grid"><button class="btn btn-orange mb-0" type="submit">Edit User </button></div>

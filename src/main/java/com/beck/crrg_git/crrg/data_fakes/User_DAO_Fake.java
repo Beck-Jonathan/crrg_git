@@ -149,8 +149,26 @@ public class User_DAO_Fake implements iUser_DAO {
   }
 
   @Override
-  public int changeRole(String userID, String Role) throws SQLException {
-    return 0;
+  public int changeRole(String userID, String Role) throws SQLException, IllegalArgumentException {
+    int result = 0;
+    for (User user : users) {
+      if (user.getUser_ID().equals(userID)){
+        if (user.getRole_ID().equals(Role)){
+          throw new IllegalArgumentException("User already in Role.");
+        }
+        try{
+          user.setRole_ID(Role);
+        }catch(Exception e){
+          throw new IllegalArgumentException("Invalid Role");
+        }
+        result = 1;
+        break;
+      }
+    }
+    if (result == 0){
+      throw new SQLException("User not found");
+    }
+    return result;
   }
 
   @Override
@@ -190,10 +208,12 @@ public class User_DAO_Fake implements iUser_DAO {
 
   }
   private boolean duplicateKey(User _user){
-    return _user.getUser_ID().equals("DUPLICATE");
+
+    return _user.getUser_ID().equals("DUPLICATE") || _user.getFirst_Name().toLowerCase().contains("duplicate");
   }
   private boolean exceptionKey(User _user){
-    return _user.getUser_ID().equals("EXCEPTION");
+
+    return _user.getUser_ID().equals("EXCEPTION")  || _user.getFirst_Name().toLowerCase().contains("exception");
   }
 
 }

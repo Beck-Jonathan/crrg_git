@@ -33,6 +33,9 @@ public class Edit_Role extends HttpServlet {
     user_DAO = new User_DAO();
 
   }
+  public void init(iUser_DAO user_DAO){
+    this.user_DAO = user_DAO;
+  }
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
     Map<String, String> results = new HashMap<>();
@@ -46,32 +49,25 @@ public class Edit_Role extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
     }
-
     String userID=req.getParameter("objectID");
     String Role = req.getParameter("mode");
 
-
-
-
-
-    int result = 0;
-
+    Integer result = 0;
     try{
-
         result = user_DAO.changeRole(userID,Role);
-
     }
     catch(Exception ex){
-      results.put("dbStatus",ex.getMessage());
+      resp.setContentType("text/plain");
+      resp.getWriter().write(ex.getMessage());
+      return;
     }
 
-
-
     resp.setContentType("text/plain");
-    resp.getWriter().write(result);
+    resp.getWriter().write(result.toString());
   }
 }
 

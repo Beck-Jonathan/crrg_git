@@ -24,7 +24,7 @@
     <tr><td>View all Picture</td><td><a href="all-Pictures"> View </a> </td></tr>
     <%-- <tr><td>View all Skater</td><td><a href="all-Skaters"> View </a> </td></tr> --%>
     <%-- <tr><td>View all Tag</td><td><a href="all-Tags"> View </a> </td></tr> --%>
-    <tr><td>View all User</td><td><a href="allCrrgUser"> View </a> </td></tr>
+    <tr><td>View all User</td><td><a href="all-Users"> View </a> </td></tr>
     <tr><td>Manage Sponsors</td><td><a href="all-Sponsors"> View </a> </td></tr>
     <tr><td>Manage Sponsor Images</td><td><a href="all-Sponsor_Tags"> View </a> </td></tr>
     
