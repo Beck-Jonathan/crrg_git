@@ -7,7 +7,9 @@ package com.beck.crrg_git.crrg.controllers;
 import com.beck.crrg_git.crrg.data.Album_DAO;
 import com.beck.crrg_git.crrg.data.Contributor_DAO;
 import com.beck.crrg_git.crrg.data.Picture_DAO;
+import com.beck.crrg_git.crrg.data.Sponsor_DAO;
 import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.iSponsor_DAO;
 import com.beck.crrg_git.crrg.models.Album;
 import com.beck.crrg_git.crrg.models.Picture;
 import com.beck.crrg_git.crrg.models.User;
@@ -30,16 +32,19 @@ public class Activation_Servlet extends HttpServlet {
   private iAlbum_DAO albumDAO;
   private iPicture_DAO pictureDAO;
   private iContributor_DAO contributorDAO;
+  private iSponsor_DAO sponsorDAO;
   @Override
   public void init() throws ServletException{
     albumDAO = new Album_DAO();
     pictureDAO = new Picture_DAO();
     contributorDAO = new Contributor_DAO();
+    sponsorDAO = new Sponsor_DAO();
   }
-  public void init ( iPicture_DAO pictureDAO,iAlbum_DAO albumDAO,iContributor_DAO contributorDAO){
+  public void init ( iPicture_DAO pictureDAO,iAlbum_DAO albumDAO,iContributor_DAO contributorDAO, iSponsor_DAO sponsorDAO){
     this.albumDAO = albumDAO;
     this.pictureDAO = pictureDAO;
     this.contributorDAO = contributorDAO;
+    this.sponsorDAO = sponsorDAO;
   }
   @Override
   protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -63,21 +68,35 @@ public class Activation_Servlet extends HttpServlet {
 
     String object = req.getParameter("object");
 
+    if(objectID==null){
+      objectID="";
+    }
     int ObjectID = -1;
     int mode = -1;
     try {
-       ObjectID = Integer.parseInt(req.getParameter("objectID"));
-       mode = Integer.parseInt(req.getParameter("mode"));
+      mode = Integer.parseInt(modeID);
+
     } catch (Exception ex){
+      mode=-1;
+      results.put("dbStatus",ex.getMessage());
+    }
+    try {
+      ObjectID = Integer.parseInt(objectID);
+    }
+    catch (Exception ex){
+      ObjectID=-1;
       results.put("dbStatus",ex.getMessage());
     }
     Integer result = 0;
-    if (ObjectID>0&&(mode==0||mode==1)) {
+    if ((ObjectID>0||!objectID.isEmpty())&&(mode==0||mode==1)) {
       try {
         if (object.equals("picture")) {
           result = pictureDAO.changeActivation(ObjectID, mode);
         } else if (object.equals("album")) {
           result = albumDAO.changeActivation(ObjectID, mode);
+        }
+        else if (object.equals("sponsor")){
+          result = sponsorDAO.changeActivatiion(objectID, mode);
         }
       } catch (Exception ex) {
         results.put("dbStatus", ex.getMessage());

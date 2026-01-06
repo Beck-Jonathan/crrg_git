@@ -38,6 +38,20 @@
 <c:if test="${pageTitle eq 'All Users' }">
     <script src="${appURL}/js/crrg/All_users.js"></script>
 </c:if>
+<c:if test="${pageTitle eq 'All Sponsors' }">
+    <script src="${appURL}/js/crrg/activate.js"></script>
+</c:if>
+
+<c:if test="${pageTitle ne 'Image Gallery of CRRD. Photos: Mark Young'}">
+    <c:if test="${fn:contains(pageTitle, 'test')}}">
+
+
+        <script src="${appURL}/js/crrg/crrg_admin.js"></script>
+
+
+
+    </c:if>
+</c:if>
 
 
 </body>

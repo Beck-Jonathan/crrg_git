@@ -8,6 +8,7 @@ import java.util.*;
 import com.beck.crrg_git.crrg.data_fakes.Album_DAO_Fake;
 import com.beck.crrg_git.crrg.data_fakes.Contributor_DAO_Fake;
 import com.beck.crrg_git.crrg.data_fakes.Picture_DAO_Fake;
+import com.beck.crrg_git.crrg.data_fakes.aws_DAO_Fake;
 import com.beck.crrg_git.crrg.models.Picture;
 import com.beck.crrg_git.crrg.models.Picture_VM;
 import com.beck.crrg_git.crrg.models.User;
@@ -22,6 +23,7 @@ import org.springframework.mock.web.*;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.web.multipart.MultipartFile;
 
+import static com.beck.crrg_git.crrg.shared.MultipartContentBuilder.buildMultipartContent;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Add_PictureTest {
@@ -49,7 +51,7 @@ public class Add_PictureTest {
   public void setup() throws ServletException{
 
     servlet = new Add_Picture();
-    servlet.init(new Picture_DAO_Fake(),new Album_DAO_Fake(),new Contributor_DAO_Fake());
+    servlet.init(new Picture_DAO_Fake(),new Album_DAO_Fake(),new Contributor_DAO_Fake(), new aws_DAO_Fake());
     request =  new MockMultipartHttpServletRequest();
     response = new MockHttpServletResponse();
     session = new MockHttpSession();
@@ -408,40 +410,7 @@ public class Add_PictureTest {
     servlet = new Add_Picture();
     servlet.init();
   }
-  private byte[] buildMultipartContent(
-      String boundary,
-      Map<String, String> fields,
-      Map<String, byte[]> files
-  ) throws IOException {
 
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    String lineSeparator = "\r\n";
-    String boundaryPrefix = "--" + boundary;
-
-    // Form fields
-    for (Map.Entry<String, String> field : fields.entrySet()) {
-      out.write((boundaryPrefix + lineSeparator).getBytes());
-      out.write(("Content-Disposition: form-data; name=\"" + field.getKey() + "\"" + lineSeparator).getBytes());
-      out.write(("Content-Type: text/plain; charset=UTF-8" + lineSeparator).getBytes());
-      out.write((lineSeparator).getBytes());
-      out.write((field.getValue() + lineSeparator).getBytes());
-    }
-
-    // File fields
-    for (Map.Entry<String, byte[]> file : files.entrySet()) {
-      out.write((boundaryPrefix + lineSeparator).getBytes());
-      out.write(("Content-Disposition: form-data; name=\"" + file.getKey() + "\"; filename=\"" + file.getKey() + ".zip\"" + lineSeparator).getBytes());
-      out.write(("Content-Type: application/zip" + lineSeparator).getBytes());
-      out.write((lineSeparator).getBytes());
-      out.write(file.getValue());
-      out.write(lineSeparator.getBytes());
-    }
-
-    // Closing boundary
-    out.write((boundaryPrefix + "--" + lineSeparator).getBytes());
-
-    return out.toByteArray();
-  }
 
   @Test
   public void testFalseOverRideCanTrigger() throws IOException, ServletException {
@@ -519,6 +488,8 @@ public class Add_PictureTest {
     assertEquals("False Override activated.",results.get("falseOverride"));
     assertEquals("24 Pictures Added. 0 Pictures Not Added.", results.get("dbStatus"));
   }
+
+
 
 }
 

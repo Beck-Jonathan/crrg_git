@@ -6,26 +6,19 @@ package com.beck.crrg_git.crrg.controllers;
 import com.beck.crrg_git.crrg.data.Picture_DAO;
 import com.beck.crrg_git.crrg.data.Contributor_DAO;
 import com.beck.crrg_git.crrg.data.Album_DAO;
+import com.beck.crrg_git.crrg.data.aws_DAO;
+import com.beck.crrg_git.crrg.data_interfaces.Iaws_DAO;
 import com.beck.crrg_git.crrg.models.*;
 import com.beck.crrg_git.crrg.data_interfaces.iPicture_DAO;
 import com.beck.crrg_git.crrg.data_interfaces.iContributor_DAO;
 import com.beck.crrg_git.crrg.data_interfaces.iAlbum_DAO;
-import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import org.apache.commons.fileupload2.core.DiskFileItem;
-import org.apache.commons.fileupload2.core.FileUploadContentTypeException;
 import org.apache.commons.fileupload2.jakarta.JakartaServletDiskFileUpload;
-import org.apache.commons.io.IOUtils;
-import software.amazon.awssdk.core.sync.RequestBody;
-import software.amazon.awssdk.services.s3.S3Client;
-
-import software.amazon.awssdk.services.s3.model.GetUrlRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
 import java.io.*;
 import java.sql.SQLException;
@@ -50,18 +43,23 @@ public class Add_Picture extends HttpServlet {
   private iPicture_DAO pictureDAO;
   private iContributor_DAO contributorDAO;
   private iAlbum_DAO albumDAO;
+  private Iaws_DAO aws_dao;
 
   @Override
   public void init() throws ServletException {
     pictureDAO = new Picture_DAO();
     contributorDAO = new Contributor_DAO();
     albumDAO = new Album_DAO();
+    aws_dao = new aws_DAO() ;
+
+
   }
 
-  public void init(iPicture_DAO pictureDAO, iAlbum_DAO albumDAO, iContributor_DAO contributorDAO) {
+  public void init(iPicture_DAO pictureDAO, iAlbum_DAO albumDAO, iContributor_DAO contributorDAO, Iaws_DAO iaws_dao   ) {
     this.pictureDAO = pictureDAO;
     this.albumDAO = albumDAO;
     this.contributorDAO = contributorDAO;
+    this.aws_dao = iaws_dao;
   }
 
   @Override
@@ -110,17 +108,7 @@ public class Add_Picture extends HttpServlet {
       return;
     }
     int errorsCount =0;
-    List<Album_VM> allAlbums;
-    List<Contributor_VM> allContributors;
-    try {
-      allAlbums = albumDAO.getAllAlbum(20, 0, "");
-      allContributors = contributorDAO.getAllContributor(20, 0);
-    } catch (SQLException e) {
-      allAlbums = new ArrayList<>();
-      allContributors = new ArrayList<>();
-    }
-    req.setAttribute("Albums", allAlbums);
-    req.setAttribute("Contributors", allContributors);
+
 
     List<File> files = new ArrayList<>();
     JakartaServletDiskFileUpload upload = new JakartaServletDiskFileUpload();
@@ -138,8 +126,17 @@ public class Add_Picture extends HttpServlet {
     String contributorID = "";
     String isApproved = "";
     String isActive = "";
+    List<Album_VM> allAlbums;
+    List<Contributor_VM> allContributors;
     if ( errorsCount > 0) {
       req.setAttribute("results", results);
+      try {
+        allAlbums = albumDAO.getAllAlbum(20, 0, "");
+        allContributors = contributorDAO.getAllContributor(20, 0);
+      } catch (SQLException e) {
+        allAlbums = new ArrayList<>();
+        allContributors = new ArrayList<>();
+      }
       req.setAttribute("Albums", allAlbums);
       req.setAttribute("Contributors", allContributors);
       req.getRequestDispatcher("WEB-INF/crrg/AddPicture.jsp").forward(req, resp);
@@ -147,7 +144,7 @@ public class Add_Picture extends HttpServlet {
     }
 
     try {
-      files = pictureDAO.saveUploadedFiles(req, applicationPath, items,UPLOAD_DIR);
+      files = aws_dao.saveUploadedFiles(req, applicationPath, items,UPLOAD_DIR);
     } catch (Exception e) {
       results.put("fileSaveError", e.getMessage());
     }
@@ -195,7 +192,7 @@ public class Add_Picture extends HttpServlet {
       if (errorsCount==0) {
         Map<File, String> uploadedUrls;
         try {
-          uploadedUrls = pictureDAO.uploadToS3(files, bucketName);
+          uploadedUrls = aws_dao.uploadToS3(files, bucketName);
         } catch (Exception ex) {
           results.put("dbError", ex.getMessage());
           req.setAttribute("results", results);
@@ -269,6 +266,16 @@ public class Add_Picture extends HttpServlet {
 
         results.put("dbStatus", added + " Pictures Added. " + notadded + " Pictures Not Added.");
       }
+
+    try {
+      allAlbums = albumDAO.getAllAlbum(20, 0, "");
+      allContributors = contributorDAO.getAllContributor(20, 0);
+    } catch (SQLException e) {
+      allAlbums = new ArrayList<>();
+      allContributors = new ArrayList<>();
+    }
+    req.setAttribute("Albums", allAlbums);
+    req.setAttribute("Contributors", allContributors);
         req.setAttribute("results", results);
 
       req.setAttribute("pageTitle", "Add Picture");

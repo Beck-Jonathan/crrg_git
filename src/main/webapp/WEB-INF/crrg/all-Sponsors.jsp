@@ -3,7 +3,7 @@ Create the JSP  For Viewing All of The  Sponsor table
  Created By Jonathan Beck 11/14/2024
 **********--%>
 <%@include file="/WEB-INF/crrg/head.jsp"%>
-<div class = "container">
+<div class = "container" id="addr" addr="${appURL}" objectType="sponsor">
 <div class="row">
 <div class="col-12">
 <h1>All Roller Sponsors</h1>
@@ -20,7 +20,7 @@ Add Sponsor   <a href="addSponsor">Add</a>
 <th scope="col">Description</th>
 <th scope="col">is_active</th>
 <th scope="col">Edit</th>
-<th scope="col">Delete</th>
+
 </tr>
 </thead>
 <tbody>
@@ -29,12 +29,8 @@ Add Sponsor   <a href="addSponsor">Add</a>
 <td><a href = "editsponsor?sponsorid=${sponsor.sponsor_ID}&mode=view">${fn:escapeXml(sponsor.sponsor_ID)}</a></td><td>${fn:escapeXml(sponsor.tier_ID)}</td>
 <td>${fn:escapeXml(sponsor.website)}</td>
 <td>${fn:escapeXml(sponsor.description)}</td>
-<td><input type="checkbox" disabled <c:if test="${sponsor.is_active}">checked</c:if>></td>
+	<td><input type="checkbox" id="${sponsor.sponsor_ID}" class="Activation_Box" <c:if test="${sponsor.is_Active}">checked</c:if>> <p  id="${sponsor.sponsor_ID}_status"></p></td>
 <td><a href = "editSponsor?sponsorid=${sponsor.sponsor_ID}&mode=edit" > Edit </a></td>
-<td><a href = "deletesponsor?sponsorid=${sponsor.sponsor_ID}&mode=<c:choose><c:when test="${sponsor.is_active}">0</c:when>
-						<c:otherwise>1</c:otherwise>
-						</c:choose>">
-<c:if test="${sponsor.is_active}">de</c:if>Activate </a></td>
 </tr>
 </c:forEach>
 </tbody>

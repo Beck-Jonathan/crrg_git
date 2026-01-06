@@ -48,13 +48,13 @@ public class Sponsor_DAO implements iSponsor_DAO {
    * @author Jonathan Beck
    */
   @Override
-  public  List<Sponsor> getAllSponsor(String Order_By) {
+  public  List<Sponsor> getAllSponsor(String _Tier_ID) {
     List<Sponsor> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
         try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_all_Sponsor(?)}")) {
 
-          statement.setString(1,Order_By);
+          statement.setString(1,_Tier_ID);
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {String Sponsor_ID = resultSet.getString("Sponsor_Sponsor_ID");
               String Tier_ID = resultSet.getString("Sponsor_Tier_ID");
@@ -71,7 +71,8 @@ public class Sponsor_DAO implements iSponsor_DAO {
     } catch (SQLException e) {
       throw new RuntimeException("Could not retrieve Sponsors. Try again later");
     }
-    return result;}
+    return result;
+  }
 
   @Override
   public List<String> getDistinctSponsorForDropdown() throws SQLException {
@@ -214,5 +215,25 @@ public class Sponsor_DAO implements iSponsor_DAO {
       }
     }
     return result;
+  }
+
+  @Override
+  public int changeActivatiion(String objectID, int mode) throws SQLException {
+    int rowsAffected=0;
+    try (Connection connection = getConnection()) {
+      if (connection != null) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_change_active_Sponsor( ?,?)}")){
+          statement.setString(1,objectID);
+          statement.setInt(2,mode);
+          rowsAffected = statement.executeUpdate();
+          if (rowsAffected == 0) {
+            throw new RuntimeException("Could not change picture status. Try again later(1)");
+          }
+        }
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException("Could not change picture status. Try again later(2)");
+    }
+    return rowsAffected;
   }
 }

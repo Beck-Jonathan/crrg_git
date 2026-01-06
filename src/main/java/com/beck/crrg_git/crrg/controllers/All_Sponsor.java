@@ -42,9 +42,9 @@ public class All_Sponsor extends HttpServlet {
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendRedirect("/crrgLogin");
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
-
     }
 
     session.setAttribute("currentPage",req.getRequestURL());

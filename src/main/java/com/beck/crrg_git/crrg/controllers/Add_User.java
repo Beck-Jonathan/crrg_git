@@ -31,6 +31,10 @@ public class Add_User extends HttpServlet{
     userDAO = new User_DAO();
   }
 
+  public void init(iUser_DAO userDAO){
+    this.userDAO = userDAO;
+  }
+
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -42,7 +46,8 @@ public class Add_User extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
     }
 
@@ -64,23 +69,34 @@ public class Add_User extends HttpServlet{
     HttpSession session = req.getSession();
     User user = (User)session.getAttribute("User");
     if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
+      session.invalidate();
+      resp.sendRedirect("crrgLogin");
       return;
     }
 
     List<String> allRoles = userDAO.getDistinctRoleForDropdown();
     req.setAttribute("Roles", allRoles);
     String _User_ID = req.getParameter("inputuserUser_ID");
-    _User_ID=_User_ID.trim();
+    if (_User_ID!=null) {
+      _User_ID=_User_ID.trim();
+    }
     String _Role_ID = req.getParameter("inputuserRole_ID");
-    _Role_ID=_Role_ID.trim();
+    if (_Role_ID!=null) {
+      _Role_ID=_Role_ID.trim();
+    }
     String _First_Name = req.getParameter("inputuserFirst_Name");
-    _First_Name=_First_Name.trim();
+    if (_First_Name!=null) {
+      _First_Name=_First_Name.trim();
+    }
     String _Last_Name = req.getParameter("inputuserLast_Name");
-    _Last_Name=_Last_Name.trim();
+    if (_Last_Name!=null) {
+      _Last_Name=_Last_Name.trim();
+    }
     String _Email = req.getParameter("inputuserEmail");
-    _Email=_Email.trim();
-    DateTime _Last_Logged_In = null;
+    if (_Email!=null) {
+      _Email=_Email.trim();
+    }
+
 
     Map<String, String> results = new HashMap<>();
     results.put("User_ID",_User_ID);
@@ -94,28 +110,28 @@ public class Add_User extends HttpServlet{
     int errors =0;
     try {
       _user.setUser_ID(_User_ID);
-    } catch(IllegalArgumentException e) {
+    } catch(Exception e) {
       results.put("userUser_IDerror", e.getMessage());
       errors++;
     }
     try {
       _user.setRole_ID(_Role_ID);
-    } catch(IllegalArgumentException e) {results.put("userRole_IDerror", e.getMessage());
+    } catch(Exception e) {results.put("userRole_IDerror", e.getMessage());
       errors++;
     }
     try {
       _user.setFirst_Name(_First_Name);
-    } catch(IllegalArgumentException e) {results.put("userFirst_Nameerror", e.getMessage());
+    } catch(Exception e) {results.put("userFirst_Nameerror", e.getMessage());
       errors++;
     }
     try {
       _user.setLast_Name(_Last_Name);
-    } catch(IllegalArgumentException e) {results.put("userLast_Nameerror", e.getMessage());
+    } catch(Exception e) {results.put("userLast_Nameerror", e.getMessage());
       errors++;
     }
     try {
       _user.setEmail(_Email);
-    } catch(IllegalArgumentException e) {results.put("userEmailerror", e.getMessage());
+    } catch(Exception e) {results.put("userEmailerror", e.getMessage());
       errors++;
     }
     _user.setLast_Logged_In(null);
@@ -144,7 +160,7 @@ public class Add_User extends HttpServlet{
           result = userDAO.add(_user);
         }
       }catch(Exception ex){
-        results.put("dbStatus","Database Error");
+        results.put("dbError","Database Error");
       }
       if (result>0){
         Integer newUser=1;

@@ -38,7 +38,7 @@ public interface iSponsor_DAO {
    * @return List of Sponsor
    * @author Jonathan Beck
    */
-  List<Sponsor> getAllSponsor( String Order_By) throws SQLException;
+  List<Sponsor> getAllSponsor( String Tier) throws SQLException;
   /**
    * DAO Method to retreive all Sponsor objects
    * @return List of Sponsor
@@ -51,20 +51,8 @@ public interface iSponsor_DAO {
    * @author Jonathan Beck
    */
   List<String> getDistinctSponsorForDropdown() throws SQLException;
-  /**
-   * DAO Method to delete Sponsor objects
-   * @param Sponsor_ID the Sponsor to be deleted
-   * @return number of records deleted
-   * @author Jonathan Beck
-   */
-  int deactivateSponsor( String Sponsor_ID) throws SQLException;
-  /**
-   * DAO Method to undelete Sponsor objects
-   * @param Sponsor_ID the Sponsor to be undeleted
-   * @return number of records undeleted
-   * @author Jonathan Beck
-   */
-  int undeleteSponsor( String Sponsor_ID) throws SQLException;
+
+
 
   List<String> selectAllTiersForDropDown() throws SQLException;
 
@@ -85,4 +73,6 @@ public interface iSponsor_DAO {
    * @author Jonathan Beck
    */
   int update(Sponsor oldSponsor, Sponsor newSponsor) throws SQLException;
+
+  int changeActivatiion(String objectID, int mode) throws SQLException;
 }

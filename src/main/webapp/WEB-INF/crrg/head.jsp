@@ -22,4 +22,15 @@
 
 
 </head>
+<c:if test="${pageTitle ne 'Image Gallery of CRRD. Photos: Mark Young'}">
+    <c:if test="${!fn:contains(pageTitle, 'Log In!')}">
+
+
+        <%@include file="/WEB-INF/crrg/header.jsp"%>
+
+
+
+    </c:if>
+
+</c:if>
 <body>

@@ -1,12 +1,14 @@
 package com.beck.crrg_git.crrg.models;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * @ author Jonathan Beck
  * @ version 1.0
  * @ since 1.0
  */
 
-public class Sponsor_Tag {
+public class Sponsor_Tag implements Comparable<Sponsor_Tag> {
   private String Sponsor_ID;
   private Integer Picture_ID;
   private String Description;
@@ -64,6 +66,35 @@ public class Sponsor_Tag {
   }
   public void setis_Primary(boolean is_Primary) {
     this.is_Primary = is_Primary;
+  }
+
+  @Override
+  public int compareTo(@NotNull Sponsor_Tag o) {
+    if (this.Sponsor_ID.compareTo(o.Sponsor_ID)<0){
+      return -1;
+    }
+    else if(this.Sponsor_ID.compareTo(o.Sponsor_ID) > 0){
+      return 1;
+    }
+    if (this.Picture_ID.compareTo(o.Picture_ID)<0){
+      return -1;
+    }
+    else if(this.Picture_ID.compareTo(o.Picture_ID) > 0){
+      return 1;
+    }
+    if (this.Description.compareTo(o.Description)<0){
+      return -1;
+    }
+    else if(this.Description.compareTo(o.Description) > 0){
+      return 1;
+    }
+    if (!this.is_Primary&&o.is_Primary){
+      return -1;
+    }
+    if (this.is_Primary&&!o.is_Primary){
+      return 1;
+    }
+    return 0;
   }
 
 }

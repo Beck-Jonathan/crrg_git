@@ -104,49 +104,6 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
     return results;
   }
 
-  @Override
-  public int deactivateSponsor(String Sponsor_ID) throws SQLException {
-    int location =-1;
-    for (int i=0;i<sponsorVMs.size();i++){
-      if (sponsorVMs.get(i).getSponsor_ID().equals(Sponsor_ID)){
-        location =i;
-        break;
-      }
-    }
-    if (location==-1){
-      throw new SQLException("Unable To Find Sponsor.");
-    }
-    if(sponsorVMs.get(location).getIs_Active()){
-      sponsorVMs.get(location).setIs_Active(false);
-      return 1;
-    }
-    else {
-      return 0;
-    }
-  }
-
-  @Override
-  public int undeleteSponsor(String Sponsor_ID) throws SQLException {
-    int location =-1;
-    for (int i=0;i<sponsorVMs.size();i++){
-      if (sponsorVMs.get(i).getSponsor_ID().equals(Sponsor_ID)){
-        location =i;
-        break;
-      }
-    }
-    if (location==-1){
-      throw new SQLException("Unable To Find Sponsor.");
-    }
-    if(!sponsorVMs.get(location).getIs_Active()){
-      sponsorVMs.get(location).setIs_Active(true);
-      return 1;
-    }
-    else {
-      return 0;
-    }
-  }
-
-
 
   @Override
   public List<String> selectAllTiersForDropDown() throws SQLException {
@@ -195,6 +152,33 @@ public class Sponsor_DAO_Fake implements iSponsor_DAO {
     Sponsor_VM updated = new Sponsor_VM(newSponsor);
     sponsorVMs.set(location,updated);
     return 1;
+  }
+
+  @Override
+  public int changeActivatiion(String objectID, int mode) throws SQLException {
+    int result = 0;
+    int location =-1;
+    for (int i=0;i<sponsorVMs.size();i++){
+      if (sponsorVMs.get(i).getSponsor_ID().equals(objectID)){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException();
+    }
+    boolean status = sponsorVMs.get(location).getIs_Active();
+    if (status&&mode==0) {
+      sponsorVMs.get(location).setIs_Active(false);
+      result =1;
+    }
+    if (!status&&mode==1){
+      sponsorVMs.get(location).setIs_Active(true);
+      result=1;
+
+    }
+
+    return result;
   }
 
   private boolean duplicateKey(Sponsor _sponsor){

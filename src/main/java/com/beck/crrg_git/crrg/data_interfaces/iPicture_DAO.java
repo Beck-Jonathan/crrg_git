@@ -56,7 +56,5 @@ public interface iPicture_DAO {
 
 public int getPictureCount() throws SQLException;
 
-  Map<File, String> uploadToS3(List<File> files, String bucketName) throws Exception;
-  List<File> saveUploadedFiles(HttpServletRequest req, String applicationPath, List<DiskFileItem> items, String UPLOAD_DIR) throws Exception;
 
   }

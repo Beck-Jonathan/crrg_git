@@ -36,7 +36,11 @@ $(document).ready(function() {
 
                 document.getElementById(id + "_status").innerHTML = "<h5>&#x2705</h5>";
                 document.getElementById(id+"_status").style.color="green";
+                console.log(typeof id)
+                let statusbox = document.getElementById(id+"_status");
+                
                 $("#"+id+"_status").slideUp(2000);
+                $(statusbox).slideUp(2000);
             }
         }
         xhr.open("POST", url+"/updateActivation", true);

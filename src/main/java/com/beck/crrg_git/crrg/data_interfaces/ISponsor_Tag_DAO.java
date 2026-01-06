@@ -12,5 +12,5 @@ public interface ISponsor_Tag_DAO {
 
   List<Sponsor_Tag_VM> getAllSponsor_Tag(String Sponsor_ID);
 
-  int  deleteSponsor_Tag(String  sponsor, int pictureID);
+  int  deleteSponsor_Tag(String  sponsor, int PictureID) throws SQLException;
 }

@@ -27,21 +27,11 @@ public class All_Album_API extends HttpServlet {
   public void init() throws ServletException{
     albumDAO = new Album_DAO();
   }
+  public void init(iAlbum_DAO albumDAO){
+    this.albumDAO = albumDAO;
+  }
   @Override
   protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-//To restrict this page based on privilege level
-    int PRIVILEGE_NEEDED = 0;
-    List<String> ROLES_NEEDED = new ArrayList<>();
-    ROLES_NEEDED.add("Jonathan");
-//add roles here
-    HttpSession session = req.getSession();
-    User user = (User)session.getAttribute("User");
-    if (user==null||!user.isInRole(ROLES_NEEDED)){
-      resp.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return;
-    }
-
 
     List<Album_VM> albums = null;
     String jsonArray="";
@@ -49,16 +39,21 @@ public class All_Album_API extends HttpServlet {
     try {
       albums =albumDAO.getAllAlbum(20,0,"");
     } catch (SQLException e) {
-      throw new RuntimeException(e);
+      PrintWriter out = resp.getWriter();
+      out.println(e.getMessage());
+      out.flush();
+      return;
     }
     ObjectMapper objectMapper = new ObjectMapper();
     try {
-      jsonArray
-          = objectMapper.writeValueAsString(albums);
-      System.out.println(jsonArray);
+      jsonArray= objectMapper.writeValueAsString(albums);
+
     }
     catch (Exception e) {
-
+      PrintWriter out = resp.getWriter();
+      out.println(e.getMessage());
+      out.flush();
+      return;
     }
 
     resp.setContentType("application/json");

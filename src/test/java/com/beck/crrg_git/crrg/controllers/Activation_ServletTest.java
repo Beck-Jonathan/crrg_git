@@ -1,17 +1,15 @@
 package com.beck.crrg_git.crrg.controllers;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.*;
+
 import com.beck.crrg_git.crrg.data_fakes.Album_DAO_Fake;
 import com.beck.crrg_git.crrg.data_fakes.Contributor_DAO_Fake;
 import com.beck.crrg_git.crrg.data_fakes.Picture_DAO_Fake;
-import com.beck.crrg_git.crrg.models.Album;
-import com.beck.crrg_git.crrg.models.Album_VM;
+import com.beck.crrg_git.crrg.data_fakes.Sponsor_DAO_Fake;
+
 import com.beck.crrg_git.crrg.models.User;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletOutputStream;
+
 import jakarta.servlet.http.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +32,7 @@ public class Activation_ServletTest {
   public void setup() throws ServletException{
 
     servlet = new Activation_Servlet();
-    servlet.init(new Picture_DAO_Fake(),new Album_DAO_Fake(),  new Contributor_DAO_Fake());
+    servlet.init(new Picture_DAO_Fake(),new Album_DAO_Fake(),  new Contributor_DAO_Fake(), new Sponsor_DAO_Fake());
     request =  new MockHttpServletRequest();
     response = new MockHttpServletResponse();
     session = new MockHttpSession();
@@ -58,7 +56,7 @@ public class Activation_ServletTest {
    <p> Tests That the user will received a 200 status on doGet if they are logged in </p>
    */
   @Test
-  public void TestLoggedInUserGets200OnDoGet() throws ServletException, IOException{
+  public void TestLoggedInUserGets200OnDoPost() throws ServletException, IOException{
     User user = new User();
     user.setRole_ID("Jonathan");
     session.setAttribute("User",user);
@@ -316,6 +314,119 @@ public class Activation_ServletTest {
     request.setParameter("object","picture");
     Integer objectID=2;
     request.setParameter("objectID",objectID.toString());
+    request.setParameter("mode","1");
+    servlet.doPost(request,response);
+    int status = (int) request.getAttribute("result");
+    assertEquals(0,status);
+  }
+
+  /**
+   <p> Test that the deactivation servlet can deactivate a Album </p>
+   */
+  @Test
+  public void TestDeactivateSponsorCanDeactivate() throws ServletException, IOException {
+    User user = new User();
+    user.setRole_ID("Jonathan");
+
+    session.setAttribute("User",user);
+    request.setSession(session);
+    request.setParameter("object","sponsor");
+    String objectID="nlSjPWct";
+    request.setParameter("objectID",objectID);
+    request.setParameter("mode","0");
+    servlet.doPost(request,response);
+    int status = (int) request.getAttribute("result");
+    String writer = response.getContentAsString();
+
+
+    assertEquals(1,status);
+  }
+
+  /**
+   <p> Test that the deactivate servlet will fail if the Album is already insactive. </p>
+   */
+  @Test
+  public void TestDeactivateSponsorFailIfAlreadyFalse() throws ServletException, IOException {
+    User user = new User();
+    user.setRole_ID("Jonathan");
+    session.setAttribute("User",user);
+    request.setSession(session);
+    request.setParameter("object","sponsor");
+    String objectID="wIUiNXNE";
+    request.setParameter("objectID",objectID);
+    request.setParameter("mode","0");
+    servlet.doPost(request,response);
+    int status = (int) request.getAttribute("result");
+    assertEquals(0,status);
+  }
+
+  /**
+   <p> Test something, needs more specificity </p>
+   */
+  @Test
+  public void TestDeActivateSponsorCanFailIfKeyDoesNotExist() throws ServletException, IOException {
+    User user = new User();
+    user.setRole_ID("Jonathan");
+    session.setAttribute("User",user);
+    request.setSession(session);
+    request.setParameter("object","sponsor");
+    String objectID="wIUiNXNEsssss";
+    request.setParameter("objectID",objectID);
+    request.setParameter("mode","0");
+    servlet.doPost(request,response);
+    int status = (int) request.getAttribute("result");
+    assertEquals(0,status);
+  }
+
+  /**
+   <p> Test something, needs more specificity </p>
+   */
+  @Test
+  public void TestActivateSponsorCanFailIfKeyDoesNotExist() throws ServletException, IOException {
+    User user = new User();
+    user.setRole_ID("Jonathan");
+    session.setAttribute("User",user);
+    request.setSession(session);
+    request.setParameter("object","sponsor");
+    String objectID="wIUiNXNEssss";
+    request.setParameter("objectID",objectID);
+    request.setParameter("mode","1");
+    servlet.doPost(request,response);
+    int status = (int) request.getAttribute("result");
+
+    assertEquals(0,status);
+  }
+
+  /**
+   <p> Test that the activation servlet can active a Album </p>
+   */
+  @Test
+  public void TestactivateSponsorCanActivate() throws ServletException, IOException {
+    User user = new User();
+    user.setRole_ID("Jonathan");
+    session.setAttribute("User",user);
+    request.setSession(session);
+    request.setParameter("object","sponsor");
+    String objectID="wIUiNXNE";
+    request.setParameter("objectID",objectID);
+    request.setParameter("mode","1");
+    servlet.doPost(request,response);
+    int status = (int) request.getAttribute("result");
+    assertEquals(1,status);
+  }
+
+  /**
+   <p> Test that the activation servlet can fail if the Album is already active </p>
+   */
+  @Test
+  public void TestActivateSponsorFailIfAlreadyTrue() throws ServletException, IOException {
+    User user = new User();
+    user.setRole_ID("Jonathan");
+    session.setAttribute("User",user);
+    request.setSession(session);
+    request.setParameter("object","sponsor");
+    String objectID="nlSjPWct";
+    request.setParameter("objectID",objectID);
     request.setParameter("mode","1");
     servlet.doPost(request,response);
     int status = (int) request.getAttribute("result");
