@@ -32,7 +32,7 @@ public class All_PictureTest {
   public void setup() throws ServletException{
 
     servlet = new All_Picture();
-    servlet.init(new Picture_DAO_Fake());
+    servlet.init(new Picture_DAO_Fake(), new Album_DAO_Fake(), new Contributor_DAO_Fake());
     request =  new MockHttpServletRequest();
     response = new MockHttpServletResponse();
     session = new MockHttpSession();

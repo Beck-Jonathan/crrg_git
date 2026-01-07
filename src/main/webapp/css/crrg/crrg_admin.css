@@ -1,3 +1,57 @@
 img {
     max-width: 100%;
 }
+
+.card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width : 200px;
+    min-height: 400px;
+
+    float: left;
+    padding: 25px;
+    margin: 8px;
+    position: relative;
+
+}
+
+.imgCard{
+    min-height: 250px;
+}
+img {
+    max-width: 95%;
+    max-height: 145px;
+    padding: 8px
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.cardBottom{
+    position: absolute;
+    bottom: 8px;
+}
+
+.badge.Active.true {
+    background-color: green;
+    color: black;
+    border-style: dotted;
+}
+.badge.Approve.true {
+    background-color: blue;
+    color: black;
+    border-style: dotted;
+}
+.badge.Active.false {
+    background-color: red;
+    color: black;
+    border-style: dotted;
+}
+.badge.Approve.false {
+    background-color: red;
+    color: black;
+    border-style: dotted;
+}

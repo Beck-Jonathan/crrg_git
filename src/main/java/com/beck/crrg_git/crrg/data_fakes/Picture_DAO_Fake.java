@@ -7,12 +7,10 @@ import com.beck.crrg_git.crrg.models.Picture_VM;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.DiskFileItem;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Picture_DAO_Fake implements iPicture_DAO {
   private  List<Picture_VM> pictureVMs = new ArrayList<>();
@@ -152,17 +150,24 @@ public class Picture_DAO_Fake implements iPicture_DAO {
   }
 
   @Override
-  public List<Picture_VM> getAllPicture(int limit, int offset, int Album_ID, int Contributor_ID) throws SQLException {
+  public List<Picture_VM> getAllPicture(int offset, int limit, String search,Integer Album_ID,Integer Contributor_ID) throws SQLException {
     List<Picture_VM> results = new ArrayList<>();
     for (Picture_VM picture : pictureVMs){
+      if (Album_ID!=0&& !picture.getAlbum_ID().equals(Album_ID))
 
-      if ((Album_ID==0||picture.getAlbum_ID().equals(Album_ID))
-          &&(Contributor_ID==0||picture.getContributor_ID().equals(Contributor_ID))
-      ){
-        results.add(picture);
+      {continue;
       }
+    if (Contributor_ID!=0 && !Objects.equals(picture.getContributor_ID(), Contributor_ID))
+
+    {continue;
     }
-    return results;
+
+    if (!search.isEmpty() && ! picture.getWeb_Address().contains(search)&& ! picture.getDescription().contains(search)){
+      continue;
+    }
+    results.add(picture);
+  }
+return results;
   }
 
 
@@ -245,11 +250,30 @@ public class Picture_DAO_Fake implements iPicture_DAO {
 
 
   @Override
-  public int getPictureCount() throws SQLException {
-    return pictureVMs.size();
+  public int  getPictureCount(String search, int Album_ID, int Contributor_ID) throws SQLException {
+    int results=0;
+    for (Picture_VM picture : pictureVMs){
+      if (Album_ID!=0&& !Objects.equals(picture.getAlbum_ID(), Album_ID))
+
+      {continue;
+      }
+      if (Contributor_ID!=0 && !Objects.equals(picture.getContributor_ID(), Contributor_ID))
+
+      {continue;
+      }
+
+      if (!search.isEmpty() && ! picture.getWeb_Address().contains(search)&& ! picture.getDescription().contains(search)){
+        continue;
+      }
+      results++;
+    }
+    return results;
   }
 
-
+  @Override
+  public BufferedImage createThumbnail(BufferedImage original) {
+    return new BufferedImage(150,150,3);
+  }
 
   public int undeletePicture(Integer Picture_ID) throws SQLException{
     int location =-1;

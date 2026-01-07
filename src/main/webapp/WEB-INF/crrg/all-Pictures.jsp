@@ -7,42 +7,83 @@ Create the JSP  For Viewing All of The  Picture table
     <div class="row">
         <div class="col-12">
             <h1>All Roller Pictures</h1>
+            <div class="search-container">
+                <form action="all-Pictures">
+                    <input type="text" placeholder="Search.." id="searchBox" name="search" value="${results.search}">
+                <br/>
+                    <label for="inputpictureAlbum_ID" class="form-label">Album_ID</label>
+                    <div class="input-group input-group-lg">
+                        <select  class="<c:if test="${not empty results.pictureAlbum_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1"  id="inputpictureAlbum_ID" name="album" >
+                            <option value="0">**Any**   </option>
+
+                            <c:forEach items="${Albums}" var="Album">
+                                <option
+                                        <c:if test="${Album.album_ID eq results.AlbumID}">
+                                            selected
+                                        </c:if>
+                                        value="${Album.album_ID}">${Album.album_Name}   </option>
+                            </c:forEach>
+                        </select>
+                        <c:if test="${not empty results.pictureAlbum_IDerror}">
+                            <div class="invalid-feedback">${results.pictureAlbum_IDerror}</div>
+                        </c:if>
+                    </div>
+                    <label for="inputpictureContributor_ID" class="form-label">Contributor_ID</label>
+                    <div class="input-group input-group-lg">
+                        <select  class="<c:if test="${not empty results.pictureContributor_IDerror}">is-invalid</c:if> form-control border-0 bg-light rounded-end ps-1"  id="inputpictureContributor_ID" name="contributor" >
+                            <option value="0">**Any**   </option>
+                            <c:forEach items="${Contributors}" var="Contributor">
+                                <option
+                                <c:if test="${Contributor.contributor_ID eq results.contributorID}">
+                                    selected
+                                </c:if>
+                                 value="${Contributor.contributor_ID}">${Contributor.email }  </option>
+                            </c:forEach>
+                        </select>
+                        <c:if test="${not empty results.pictureContributor_IDerror}">
+                            <div class="invalid-feedback">${results.pictureContributor_IDerror}</div>
+                        </c:if>
+                    </div>
+                    <button type="submit" class="btn btn-outline-secondary">
+                        <i class="fas fa-search"></i> search
+                    </button>
+                </form>
+            </div>
             <p>There ${numObjects eq 1 ? "is" : "are"}&nbsp;${numObjects} Picture${numObjects ne 1 ? "s" : ""}</p>
-            Add Picture   <a href="addPicture">Add</a>
+            <p> Add Picture   <a href="addPicture">Add</a> </p>
             <c:if test="${Pictures.size() > 0}">
-                <div class="table-responsive"><table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col">Picture_ID</th>
-                        <th scope="col">Album_Name</th>
-                        <th scope="col">Contributor_Name</th>
-                        <th scope="col">description</th>
-                        <th scope="col">Is_Active</th>
-                        <th scope="col">is_Approved</th>
-                        <th scope="col">Edit</th>
-                       <!-- <th scope="col">Delete</th> -->
-                    </tr>
-                    </thead>
-                    <tbody>
+
                     <c:forEach items="${Pictures}" var="picture">
-                        <tr>
-                            <td><a href = "editPicture?pictureid=${picture.picture_ID}&mode=view">${fn:escapeXml(picture.picture_ID)}</a></td>
-                            <td>${fn:escapeXml(picture.album.album_Name)}</td>
-                            <td>${fn:escapeXml(picture.contributor.first_Name)}&nbsp${fn:escapeXml(picture.contributor.last_Name)}</td>
-                            <td>${fn:escapeXml(picture.description)}</td>
+                        <span id="${picture.picture_ID}_card" class="card directionCard">
+                            <p>${picture.album.album_Name}</p>
+     <a href="${picture.web_Address}" >
+         <img
+                 crossorigin="anonymous"
+                 referrerPolicy="no-referrer"
+             <%--<c:if test="${!fn:contains(direction.image_Link, 'drive')}">  referrerPolicy="no-referrer" </c:if> --%>
+             <%--  crossorigin="anonymous" --%>
 
+              src="./thumbnails/${picture.picture_ID}.jpg" alt="Avatar"> </a>
 
-                            <td><input type="checkbox" id="${picture.picture_ID}" class="Activation_Box" <c:if test="${picture.is_Active}">checked</c:if>> <p  id="${picture.picture_ID}_status"></p></td>
-                            <td><input type="checkbox" id="${picture.picture_ID}_a" class="Approval_Box" <c:if test="${picture.is_Approved}">checked</c:if>><p  id="${picture.picture_ID}_a_status"></p></td>
-                            <td><a href = "editPicture?pictureid=${picture.picture_ID}&mode=edit" > Edit </a></td>
-                            <%-- <td><a href = "deletepicture?pictureid=${picture.picture_ID}&mode=<c:choose><c:when test="${picture.is_Active}">0</c:when>
-						<c:otherwise>1</c:otherwise>
-						</c:choose>">
-                                <c:if test="${!picture.is_Active}">un</c:if>Delete </a></td> --%>
-                        </tr>
+    <p>${fn:escapeXml(picture.description)}</p>
+                            <p><button id="${picture.picture_ID}_Approve" class="badge Approve <c:if test = "${picture.is_Approved }"> true </c:if>">👌</button>
+                                    <button id="${picture.picture_ID}_Active" class="badge Active <c:if test = "${picture.is_Active }"> true </c:if>">🟢</button>
+                                    </p>
+        <div class="row">
+            <div class="col-2">
+                    <a  class="delButton" href="${picture.picture_ID}">❌</a>
+            </div>
+
+            <div class="col-5"></div>
+            <div class="col-2 ">
+                    <a href = "editPicture?pictureid=${picture.picture_ID}&mode=edit"> ⚙️ </a>
+            </div>
+            <div class="col-2"><a href = "editPicture?pictureid=${picture.picture_ID}&mode=view"> 🔎 </a></div>
+            <div class="col-1"></div>
+        </div>
+    </span>
                     </c:forEach>
-                    </tbody>
-                </table>
+
                 </div>
             </c:if>
         </div>
@@ -53,6 +94,9 @@ Create the JSP  For Viewing All of The  Picture table
         <input type="hidden" name="page" value="${currentPage-1}">
         <br/><br/>
         <input type="submit" value="Previous Page" />
+        <input type = hidden name = "contributor" value = "${results.contributorID}">
+        <input type = hidden name = "album" value = "${results.AlbumID}">
+        <input type = hidden name = "search" value = "${results.search}">
     </form>
 </c:if>
 
@@ -67,6 +111,9 @@ The when condition does not display a link for the current page--%>
         </c:forEach>
 
     </select>
+    <input type = hidden name = "contributor" value = "${results.contributorID}">
+    <input type = hidden name = "album" value = "${results.AlbumID}">
+    <input type = hidden name = "search" value = "${results.search}">
     <br/><br/>
     <input type="submit" value="Submit" />
 </form>
@@ -75,6 +122,9 @@ The when condition does not display a link for the current page--%>
 <c:if test="${currentPage lt noOfPages}">
     <form action="all-Pictures" method="get">
         <input type="hidden" name="page" value="${currentPage+1}">
+        <input type = hidden name = "contributor" value = "${results.contributorID}">
+        <input type = hidden name = "album" value = "${results.AlbumID}">
+        <input type = hidden name = "search" value = "${results.search}">
         <br/><br/>
         <input type="submit" value="Next Page" />
     </form>

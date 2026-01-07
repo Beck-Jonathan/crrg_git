@@ -12,6 +12,8 @@ import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetUrlRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -29,6 +31,8 @@ import static com.beck.crrg_git.crrg.data.Database.getConnection;
 
 public class Picture_DAO implements iPicture_DAO{
 
+  private int THUMB_MAX_WIDTH =150;
+  private int    THUMB_MAX_HEIGHT=150;
   /**
    * DAO Method to add Picture objects
    * @param _picture the Picture to be added
@@ -108,15 +112,16 @@ public class Picture_DAO implements iPicture_DAO{
    * @author Jonathan Beck
    */
   @Override
-  public List<Picture_VM> getAllPicture(int limit, int offset, int Album_ID, int  Contributor_ID) {
+  public List<Picture_VM> getAllPicture(int offset, int limit, String search,Integer Album_ID,Integer Contributor_ID) {
     List<Picture_VM> result = new ArrayList<>();
     try (Connection connection = getConnection()) {
       if (connection != null) {
-        try(CallableStatement statement = connection.prepareCall("{CALL sp_retreive_by_all_Picture(?,?,?,?)}")) {
-          statement.setInt(1,limit);
-          statement.setInt(2,offset);
-          statement.setInt(3,Album_ID);
-          statement.setInt(4,Contributor_ID);
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_retrieve_by_all_Picture(?,?,?,?,?)}")) {
+          statement.setInt(1,limit)
+          ;statement.setInt(2,offset);
+          statement.setString(3,search);
+          statement.setInt(4,Album_ID);
+          statement.setInt(5,Contributor_ID);
           try(ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {Integer Picture_ID = resultSet.getInt("Picture_Picture_ID");
               Integer _Album_ID = resultSet.getInt("Picture_Album_ID");
@@ -265,11 +270,14 @@ public class Picture_DAO implements iPicture_DAO{
   }
 
   @Override
-  public int getPictureCount() throws SQLException {
+  public int getPictureCount(String Search_term, int Album_ID, int Contributor_ID) throws SQLException {
 
       int result = 0;
       try (Connection connection = getConnection()) {
-        try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_picture_count()}")) {
+        try (CallableStatement statement = connection.prepareCall("{CALL sp_retreive_picture_count(?,?,?)}")) {
+          statement.setString(1,Search_term);
+          statement.setInt(2,Album_ID);
+          statement.setInt(3,Contributor_ID);
 
 
           try (ResultSet resultSet = statement.executeQuery()) {
@@ -283,6 +291,45 @@ public class Picture_DAO implements iPicture_DAO{
       }
       return result;
     }
+
+  public BufferedImage createThumbnail(BufferedImage original) {
+
+    int originalWidth = original.getWidth();
+    int originalHeight = original.getHeight();
+
+    double widthRatio = (double) THUMB_MAX_WIDTH / originalWidth;
+    double heightRatio = (double) THUMB_MAX_HEIGHT / originalHeight;
+    double scale = Math.min(widthRatio, heightRatio);
+
+    int newWidth = (int) (originalWidth * scale);
+    int newHeight = (int) (originalHeight * scale);
+
+    BufferedImage thumbnail = new BufferedImage(
+        THUMB_MAX_WIDTH,
+        THUMB_MAX_HEIGHT,
+        BufferedImage.TYPE_INT_RGB
+    );
+
+    Graphics2D g2d = thumbnail.createGraphics();
+    g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+        RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+    g2d.setRenderingHint(RenderingHints.KEY_RENDERING,
+        RenderingHints.VALUE_RENDER_QUALITY);
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+        RenderingHints.VALUE_ANTIALIAS_ON);
+
+    // White background (letterbox)
+    g2d.setColor(Color.WHITE);
+    g2d.fillRect(0, 0, THUMB_MAX_WIDTH, THUMB_MAX_HEIGHT);
+
+    int x = (THUMB_MAX_WIDTH - newWidth) / 2;
+    int y = (THUMB_MAX_HEIGHT - newHeight) / 2;
+
+    g2d.drawImage(original, x, y, newWidth, newHeight, null);
+    g2d.dispose();
+
+    return thumbnail;
+  }
 
 
   }

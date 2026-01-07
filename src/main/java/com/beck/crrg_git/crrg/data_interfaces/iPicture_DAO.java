@@ -5,6 +5,7 @@ import com.beck.crrg_git.crrg.models.Picture_VM;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload2.core.DiskFileItem;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
@@ -35,8 +36,7 @@ public interface iPicture_DAO {
    * @return List of Picture
    * @author Jonathan Beck
    */
-  List<Picture_VM> getAllPicture(int limit, int offset, int Album_ID, int  Contributor_ID) throws SQLException;
-
+  List<Picture_VM> getAllPicture(int offset, int limit, String search,Integer Album_ID,Integer Contributor_ID) throws SQLException;
   /**
    * DAO Method to retreive by Foreign Key Picture objects
    * @return List of Picture
@@ -52,9 +52,10 @@ public interface iPicture_DAO {
    * @return List of Picture
    * @author Jonathan Beck
    */
-  public List<Picture> getActivePicturebyAlbum(Integer Album_ID) throws SQLException;
+   List<Picture> getActivePicturebyAlbum(Integer Album_ID) throws SQLException;
 
-public int getPictureCount() throws SQLException;
+  int getPictureCount(String Search_term, int Album_ID, int Contributor_ID) throws SQLException;
 
+  BufferedImage createThumbnail(BufferedImage original);
 
-  }
+}
