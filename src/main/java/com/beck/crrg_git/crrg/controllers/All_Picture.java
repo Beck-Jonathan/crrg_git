@@ -69,13 +69,23 @@ public class All_Picture extends HttpServlet {
     String contributor = req.getParameter("contributor");
     Integer contributorID=0;
     if (contributor!=null){
-      contributorID = Integer.valueOf(contributor);
+      try {
+        contributorID = Integer.valueOf(contributor);
+      }catch (Exception e) {
+        contributorID=0;
+      }
+
       results.put("contributorID",contributorID.toString());
 
     }
     Integer AlbumID=0;
     if (album!=null){
-      AlbumID = Integer.valueOf(album);
+      try {
+        AlbumID = Integer.valueOf(album);
+      }catch (Exception e) {
+        AlbumID=0;
+      }
+
 
       results.put("AlbumID",AlbumID.toString());
     }
@@ -104,23 +114,32 @@ public class All_Picture extends HttpServlet {
       picture_count = pictureDAO.getPictureCount(search_term,AlbumID,contributorID);
       ServletContext context = getServletContext();
       String thumbDirPath = context.getRealPath("/thumbnails");
+      if (thumbDirPath == null) {
+        // Unit tests / WAR / non-exploded deployments
+        thumbDirPath = System.getProperty("java.io.tmpdir") + File.separator + "thumbnails";
+      }
       File thumbDir = new File(thumbDirPath);
       thumbDir.mkdirs();
       for (Picture_VM x : pictures){
         File thumbnailFile = new File(thumbDir, x.getPicture_ID() + ".jpg");
 
         if (thumbnailFile.exists()) {
-          x.setWeb_Address(thumbnailFile.getAbsolutePath());
+          //x.setWeb_Address(thumbnailFile.getAbsolutePath());
           continue;
         }
-        URL url = new URL(x.getWeb_Address());
+        URL url = null;
+        try {
+          url = new URL(x.getWeb_Address());
+        } catch(Exception e){
+          continue;
+        }
         BufferedImage image = ImageIO.read(url);
         // Create aspect-ratio-preserving thumbnail
         BufferedImage thumbnail = pictureDAO.createThumbnail(image);
 
         // Save thumbnail
         ImageIO.write(thumbnail, "jpg", thumbnailFile);
-        x.setWeb_Address(thumbnailFile.getAbsolutePath());
+        //x.setWeb_Address(thumbnailFile.getAbsolutePath());
       }
 
 

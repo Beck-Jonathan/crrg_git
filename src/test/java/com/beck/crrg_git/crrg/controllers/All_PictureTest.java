@@ -32,16 +32,21 @@ public class All_PictureTest {
   public void setup() throws ServletException{
 
     servlet = new All_Picture();
+    // ---- Mock servlet container ----
+    MockServletContext servletContext = new MockServletContext();
+    MockServletConfig servletConfig =
+        new MockServletConfig(servletContext, "All_Picture");
+    servlet.init(servletConfig);
     servlet.init(new Picture_DAO_Fake(), new Album_DAO_Fake(), new Contributor_DAO_Fake());
-    request =  new MockHttpServletRequest();
+    request =  new MockHttpServletRequest(servletContext);
     response = new MockHttpServletResponse();
-    session = new MockHttpSession();
+    session = new MockHttpSession(servletContext);
     rd = new MockRequestDispatcher(PAGE);
   }
 
 
   /**
-   <p> tear down by setting all variablges to null. </p>
+   <p> tear down by setting all variables to null. </p>
    */
   @AfterEach
   public void teardown(){

@@ -45,13 +45,98 @@ img {
     color: black;
     border-style: dotted;
 }
-.badge.Active.false {
-    background-color: red;
+.badge.Active.pending {
+    background: repeating-linear-gradient(
+            45deg,
+            #ffd700,
+            #ffd700 3px,
+            transparent 3px,
+            transparent 6px
+    );
     color: black;
     border-style: dotted;
 }
-.badge.Approve.false {
-    background-color: red;
+.badge.Approve.pending {
+    background: repeating-linear-gradient(
+            45deg,
+            #ffd700,
+            #ffd700 3px,
+            transparent 3px,
+            transparent 6px
+    );
     color: black;
     border-style: dotted;
+}
+
+.gallery img {
+    width: 150px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: transform 0.2s;
+}
+
+.gallery img:hover {
+    transform: scale(1.05);
+}
+
+/* Lightbox overlay */
+.lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Black border frame */
+.lightbox-frame {
+    position: relative;
+    padding: 60px;               /* thickness of black border */
+    background: black;
+    border-radius: 6px;
+}
+
+/* Image */
+.lightbox-img {
+    max-width: 80vw;
+    max-height: 80vh;
+    display: block;
+    background: #fff;
+}
+
+/* Close button */
+.close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+}
+
+/* Download button */
+.download-btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 14px;
+    background: #ffd700;
+    color: black;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.download-btn:hover {
+    background: #ffea80;
+}
+
+.lightbox {
+    animation: fadeIn 0.2s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }

@@ -53,21 +53,24 @@ Create the JSP  For Viewing All of The  Picture table
             <p> Add Picture   <a href="addPicture">Add</a> </p>
             <c:if test="${Pictures.size() > 0}">
 
+            <div class="gallery">
                     <c:forEach items="${Pictures}" var="picture">
                         <span id="${picture.picture_ID}_card" class="card directionCard">
                             <p>${picture.album.album_Name}</p>
-     <a href="${picture.web_Address}" >
+     <%-- <a href="${picture.web_Address}" > --%>
          <img
                  crossorigin="anonymous"
                  referrerPolicy="no-referrer"
+                 fullLocation = "${picture.web_Address}"
              <%--<c:if test="${!fn:contains(direction.image_Link, 'drive')}">  referrerPolicy="no-referrer" </c:if> --%>
              <%--  crossorigin="anonymous" --%>
 
-              src="./thumbnails/${picture.picture_ID}.jpg" alt="Avatar"> </a>
+              src="./thumbnails/${picture.picture_ID}.jpg" alt="Avatar">
+         <%--   </a> --%>
 
     <p>${fn:escapeXml(picture.description)}</p>
-                            <p><button id="${picture.picture_ID}_Approve" class="badge Approve <c:if test = "${picture.is_Approved }"> true </c:if>">👌</button>
-                                    <button id="${picture.picture_ID}_Active" class="badge Active <c:if test = "${picture.is_Active }"> true </c:if>">🟢</button>
+                            <p><button id="${picture.picture_ID}_Approve" class="badge Approval_Box  Approve <c:if test = "${picture.is_Approved }"> true </c:if>">👌</button>
+                                    <button id="${picture.picture_ID}_Active" class="badge Activation_Box  Active <c:if test = "${picture.is_Active }"> true </c:if>">🟢</button>
                                     </p>
         <div class="row">
             <div class="col-2">
@@ -86,6 +89,7 @@ Create the JSP  For Viewing All of The  Picture table
 
                 </div>
             </c:if>
+
         </div>
     </div>
 </div>
@@ -129,6 +133,19 @@ The when condition does not display a link for the current page--%>
         <input type="submit" value="Next Page" />
     </form>
 </c:if>
+
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox">
+    <div class="lightbox-frame">
+        <span class="close">&times;</span>
+
+        <img class="lightbox-img" id="lightboxImg">
+
+        <a id="downloadBtn" class="download-btn" download>
+            ⬇ Download
+        </a>
+    </div>
+</div>
 </main>
 <%@include file="/WEB-INF/crrg/foot.jsp"%>
 
