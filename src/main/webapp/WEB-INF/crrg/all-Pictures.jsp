@@ -59,6 +59,7 @@ Create the JSP  For Viewing All of The  Picture table
                             <p>${picture.album.album_Name}</p>
      <%-- <a href="${picture.web_Address}" > --%>
          <img
+                 id ="${picture.picture_ID}_img"
                  crossorigin="anonymous"
                  referrerPolicy="no-referrer"
                  fullLocation = "${picture.web_Address}"
@@ -69,8 +70,8 @@ Create the JSP  For Viewing All of The  Picture table
          <%--   </a> --%>
 
     <p>${fn:escapeXml(picture.description)}</p>
-                            <p><button id="${picture.picture_ID}_Approve" class="badge Approval_Box  Approve <c:if test = "${picture.is_Approved }"> true </c:if>">👌</button>
-                                    <button id="${picture.picture_ID}_Active" class="badge Activation_Box  Active <c:if test = "${picture.is_Active }"> true </c:if>">🟢</button>
+                            <p><button id="${picture.picture_ID}_Approve" picID="${picture.picture_ID}" class="badge Approval_Box  Approve <c:if test = "${picture.is_Approved }"> true </c:if>">👌</button>
+                                    <button id="${picture.picture_ID}_Active" picID="${picture.picture_ID}"  class="badge Activation_Box  Active <c:if test = "${picture.is_Active }"> true </c:if>">🟢</button>
                                     </p>
         <div class="row">
             <div class="col-2">
@@ -140,7 +141,12 @@ The when condition does not display a link for the current page--%>
         <span class="close">&times;</span>
 
         <img class="lightbox-img" id="lightboxImg">
-
+        <div id="lightboxCounter" class="lightbox-counter"></div>
+        <button class="lightbox-arrow left" id="lightboxPrev">&#10094;</button>
+        <button class="lightbox-arrow right" id="lightboxNext">&#10095;</button>
+        <p><button id="modal_Approve" class="badge Approval_Box  Approve ">👌</button>
+            <button id="modal_Active" class="badge Activation_Box  Active ">🟢</button>
+        </p>
         <a id="downloadBtn" class="download-btn" download>
             ⬇ Download
         </a>

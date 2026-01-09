@@ -100,10 +100,27 @@ img {
 
 /* Image */
 .lightbox-img {
+    cursor: grab;
+    touch-action: none;
     max-width: 80vw;
     max-height: 80vh;
     display: block;
     background: #fff;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+.lightbox-img.fade-out-left {
+    opacity: 0;
+    transform: translateX(-30px);
+}
+
+.lightbox-img.fade-out-right {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.lightbox-img.fade-in {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 /* Close button */
@@ -139,4 +156,45 @@ img {
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
+}
+
+.lightbox-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 3rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0 15px;
+    z-index: 10;
+}
+
+.lightbox-arrow.left {
+    left: 10px;
+}
+
+.lightbox-arrow.right {
+    right: 10px;
+}
+
+.lightbox-arrow:hover {
+    color: #ccc;
+}
+
+.lightbox-counter {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    color: white;
+    font-size: 0.95rem;
+    background: rgba(0,0,0,0.5);
+    padding: 4px 10px;
+    border-radius: 12px;
+}
+
+body.no-scroll {
+    overflow: hidden;
+    touch-action: none;
 }
