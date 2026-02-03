@@ -275,6 +275,32 @@ return results;
     return new BufferedImage(150,150,3);
   }
 
+  @Override
+  public int updatePicture_Description(Picture _oldPicture, Picture _newPicture) throws SQLException {
+    if (_oldPicture.getDescription().equals(_newPicture.getDescription())){
+      return 0;
+    }
+    int location =-1;
+    if (duplicateKey(_oldPicture)){
+      return 0;
+    }
+    if (exceptionKey(_oldPicture)){
+      throw new SQLException("error");
+    }
+    for (int i=0;i<pictureVMs.size();i++){
+      if (pictureVMs.get(i).getPicture_ID().equals(_oldPicture.getPicture_ID())){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException();
+    }
+    Picture_VM updated = new Picture_VM(_newPicture);
+    pictureVMs.set(location,updated);
+    return 1;
+  }
+
   public int undeletePicture(Integer Picture_ID) throws SQLException{
     int location =-1;
     for (int i=0;i<pictureVMs.size();i++){

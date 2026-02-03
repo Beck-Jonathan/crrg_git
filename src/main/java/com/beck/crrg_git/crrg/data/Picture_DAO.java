@@ -331,7 +331,25 @@ public class Picture_DAO implements iPicture_DAO{
     return thumbnail;
   }
 
-
+  @Override
+  public int updatePicture_Description(Picture _oldPicture, Picture _newPicture) throws SQLException {
+    int result = 0;
+    try (Connection connection = getConnection()) {
+      if (connection !=null){
+        try(CallableStatement statement = connection.prepareCall("{CALL sp_update_Picture_Description(? ,?,?)}"))
+        {
+          statement.setInt(1,_oldPicture.getPicture_ID());
+          statement.setString(2,_oldPicture.getDescription());
+          statement.setString(3,_newPicture.getDescription());
+          result=statement.executeUpdate();
+        } catch (SQLException e) {
+          throw new RuntimeException("Could not update Picture . Try again later");
+        }
+      }
+    }
+    return result;
   }
+
+}
 
 

@@ -57,5 +57,6 @@ public interface iPicture_DAO {
   int getPictureCount(String Search_term, int Album_ID, int Contributor_ID) throws SQLException;
 
   BufferedImage createThumbnail(BufferedImage original);
+  int updatePicture_Description(Picture _oldPicture , Picture _newPicture) throws SQLException;
 
 }

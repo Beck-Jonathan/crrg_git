@@ -65,6 +65,7 @@ public class User implements Comparable<User>{
     if(Role_ID.length()>100){
       throw new IllegalArgumentException("Role_ID is too long.");
     }
+    Role_ID=Role_ID.substring(0, 1).toUpperCase() + Role_ID.substring(1);
     this.Role_ID = Role_ID;
   }
   public String getFirst_Name() {
