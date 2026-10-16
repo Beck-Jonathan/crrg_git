@@ -78,7 +78,7 @@ public class Approval_Servlet extends HttpServlet {
           result = pictureDAO.changeApproval(ObjectID, mode);
         } else if (object.equals("album")) {
 
-          //result = albumDAO.changeApproval(ObjectID, mode);
+          //result = albumDAO.changeActivation(ObjectID, mode);
         }
       } catch (Exception ex) {
         results.put("dbStatus", ex.getMessage());
