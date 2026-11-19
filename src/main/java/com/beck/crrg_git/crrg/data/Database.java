@@ -7,9 +7,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
-  public static void main(String[] args) {
-    getConnection();
-  }
+//  public static void main(String[] args) {
+//    getConnection();
+//  }
   public static Connection getConnection() {
     Connection connection;
     Dotenv dotenv = Dotenv.load();
@@ -18,9 +18,9 @@ public class Database {
 //    String db_user = dotenv.get("DB_USER");
 //    String db_password = dotenv.get("DB_PASSWORD");
 
-    String db_connection = dotenv.get("AVIN");
-    String db_user = dotenv.get("AVIN_USER");
-    String db_password = dotenv.get("AVIN_PASS");
+    String db_connection = dotenv.get("LOCAL");
+    String db_user = dotenv.get("LOCAL_USER");
+    String db_password = dotenv.get("LOCAL_PASS");
     try {
       Class.forName(db_driver);
     } catch (ClassNotFoundException e) {

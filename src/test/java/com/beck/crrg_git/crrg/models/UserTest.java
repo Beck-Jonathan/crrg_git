@@ -78,6 +78,7 @@ class UserTest {
   public void testSetRole_IDSetsRole_ID(){
     String Role_ID = "ugVqnUnxQYTqQAcBmVXBpJaorunSXdYWfQiwvqmpSgciMcufGRZWaFoCuYAfrntZdjtbFvbaiJarbOAHnRSyyELLItuTpfnnnl";
     _user.setRole_ID(Role_ID);
+    String Role_Id_First_Upper = "UgVqnUnxQYTqQAcBmVXBpJaorunSXdYWfQiwvqmpSgciMcufGRZWaFoCuYAfrntZdjtbFvbaiJarbOAHnRSyyELLItuTpfnnnl";
     Assertions.assertEquals(Role_ID,_user.getRole_ID());
   }
   @Test

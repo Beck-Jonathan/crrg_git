@@ -4,6 +4,7 @@ import com.beck.crrg_git.crrg.data_interfaces.iTag_DAO;
 import com.beck.crrg_git.crrg.models.Tag;
 import com.beck.crrg_git.crrg.models.Tag_VM;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -104,5 +105,87 @@ public class Tag_DAO_Fake implements iTag_DAO {
     tagVMs.add(tag_VM28);
     tagVMs.add(tag_VM29);
     Collections.sort(tagVMs);
+  }
+
+  @Override
+  public int add(Tag _tag) throws SQLException {
+    if (duplicateKey(_tag)){
+      return 0;
+    }
+    if (exceptionKey(_tag)){
+      throw new SQLException("error");
+    }
+    int size = tagVMs.size();
+    Tag_VM tag_VM = new Tag_VM(_tag);
+    tagVMs.add(tag_VM);
+    int newsize = tagVMs.size();
+    return newsize-size;
+  }
+
+  @Override
+  public int deleteTag(Tag _tag) throws SQLException {
+    int size = tagVMs.size();
+    int location =-1;
+    for (int i=0;i<tagVMs.size();i++){
+      if (tagVMs.get(i).getTag_ID().equals(_tag.getTag_ID())){
+        location =i;
+        break;
+      }
+    }
+    if (location==-1){
+      throw new SQLException("Unable To Find Tag.");
+    }
+    tagVMs.remove(location);
+    int newsize = tagVMs.size();
+    return size-newsize;
+  }
+
+  @Override
+  public List<Tag_VM> getAllTag(String search, String Skater_ID, Integer Picture_ID) throws SQLException {
+    search=search.toLowerCase();
+    List<Tag_VM> results = new ArrayList<>();
+    for (Tag_VM tag : tagVMs){
+      if ((!Skater_ID.isEmpty()&& !tag.getSkater_ID().equals(Skater_ID)))
+
+      {continue;
+
+    }if(Picture_ID!=0&& !tag.getPicture_ID().equals(Picture_ID))
+
+    {continue;
+    }
+      if (!search.isEmpty()){
+        if(
+            !tag.getSkater().getDerby_Name().toLowerCase().contains(search)
+          ||!tag.getSkater().getFirst_Name().toLowerCase().contains(search)
+        ||!tag.getSkater().getLast_Name().toLowerCase().contains(search)){
+          continue;
+        }
+      }
+
+    results.add(tag);
+  }
+return results;
+  }
+
+  @Override
+  public Tag_VM getTagByPrimaryKey(Tag _tag) throws SQLException {
+    Tag_VM result = null;
+    for (Tag_VM tag : tagVMs) {
+      if (tag.getTag_ID().equals(_tag.getTag_ID())){
+        result = tag;
+        break;
+      }
+    }
+    if (result == null){
+      throw new SQLException("Tag not found");
+    }
+    return result;
+  }
+
+  private boolean duplicateKey(Tag _tag){
+    return _tag.getSkater_ID().contains("DUPLICATE");
+  }
+  private boolean exceptionKey(Tag _tag){
+    return _tag.getSkater_ID().contains("EXCEPTION");
   }
 }
